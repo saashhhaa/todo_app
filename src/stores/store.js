@@ -2,7 +2,13 @@ import { defineStore } from "pinia";
 
 export const UseUsersStore = defineStore("users", {
   state: () => ({
-    users: [],
+    users: [{
+      id: Date.now(),
+        username: 'test',
+        password: 'password',
+        email: 'email@gmail.com',
+        image: "../public/profileImageTest.jpg",
+    }],
     currentUser: null,
   }),
   actions: {

@@ -38,17 +38,31 @@ const router = useRouter();
 const sideBarIsVisible = ref(true);
 </script>
 
-<template>
-  <RouterLink to="/">
-      <button><-</button>
-    </RouterLink>
-  <button @click="sideBarIsVisible = !sideBarIsVisible">[x]</button>
-  <!-- <img class="manageSideBar" src="" alt="" @click="!sideBarIsVisible"> -->
-  <SideBar v-if="sideBarIsVisible" :categories="categories" />
+<template >
+  <div class="homepage">
+    <SideBar v-if="sideBarIsVisible" :categories="categories" />
   <Tasks />
+  </div>
+  <!-- <button @click="sideBarIsVisible = !sideBarIsVisible">[x]</button> -->
+  <!-- <img class="manageSideBar" src="" alt="" @click="!sideBarIsVisible"> -->
+  
 </template>
 
 <!-- {{ props.currentUser?.username }}
     <RouterLink to="/">
        <button >back</button> 
     </RouterLink> -->
+
+<style scoped>
+.homepage {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--blackTheme-back) !important;
+}
+
+
+</style>  

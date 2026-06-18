@@ -13,8 +13,8 @@
 
 <template>
     <div class="category">
-        <img :src="props.img" alt="">
+        <div>d</div>
         <div>{{ props.title}}</div>
-        <div>⣿</div>    
+        <div>1</div>    
     </div>
 </template>

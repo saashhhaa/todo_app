@@ -5,6 +5,26 @@
   transition: .2s all;
 }
 
-:root{
+body{
+  background-color: var(--blackTheme-back-secondary2);
+  /* background-image: linear-gradient(to top, rgba(0, 0, 0, 0.603), transparent), url("/background.png") !important; */
 
+  color: var(--blackTheme-font);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+span {
+  color: var(--accent-color);
+}
+
+:root{
+--blackTheme-font: white;
+--blackTheme-back:rgb(40 42 61); 
+--blackTheme-back-secondary: rgb(67 69 92);
+--blackTheme-back-secondary2: rgb(46 48 71);
+--accent-color: #e18f23;
 }

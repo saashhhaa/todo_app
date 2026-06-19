@@ -3,49 +3,26 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import SideBar from "../components/SideBar.vue";
 import Tasks from "../components/Tasks.vue";
-const categories = ref([
-  {
-    img: "",
-    title: "work",
-  },
-  {
-    img: "",
-    title: "study",
-  },
-  {
-    img: "",
-    title: "home",
-  },
-  {
-    img: "",
-    title: "personal",
-  },
-]);
+import { useCategoriesStore } from "../stores/store.js";
 
-const props = defineProps({
-  users: {
-    type: Array,
-    required: true,
-  },
-  currentUser: {
-    type: [Object, null],
-    required: false,
-  },
-});
 
 const router = useRouter();
 
 const sideBarIsVisible = ref(true);
 </script>
 
-<template >
+<template>
   <div class="homepage">
-    <SideBar v-if="sideBarIsVisible" :categories="categories" />
-  <Tasks />
+    <SideBar v-if="sideBarIsVisible" />
+
+    <Tasks />
   </div>
-  <!-- <button @click="sideBarIsVisible = !sideBarIsVisible">[x]</button> -->
-  <!-- <img class="manageSideBar" src="" alt="" @click="!sideBarIsVisible"> -->
-  
+  <img
+    :class="sideBarIsVisible ? 'manageSideBar' : 'manageSideBar hidden'"
+    :src="sideBarIsVisible ? '/closeSideBarIcon.svg' : '/openSideBarIcon.svg'"
+    alt=""
+    @click="sideBarIsVisible = !sideBarIsVisible"
+  />
 </template>
 
 <!-- {{ props.currentUser?.username }}
@@ -57,12 +34,33 @@ const sideBarIsVisible = ref(true);
 .homepage {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: flex-start;
+  position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: var(--blackTheme-back) !important;
+  padding-right: 20px;
+  background-color: var(--blackTheme-back-secondary2) !important;
 }
 
+.hidden {
+  left: 1vw !important;
+}
 
-</style>  
+.manageSideBar {
+  position: absolute;
+  top: 5px;
+  left: 22vw;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  filter: brightness(0.5);
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.375);
+  border-radius: 5px;
+}
+
+.manageSideBar:hover {
+  filter: brightness(1);
+}
+</style>

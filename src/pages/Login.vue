@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { UseUsersStore } from "../stores/store";
+import { useUsersStore } from "../stores/store";
 const passwordInput = ref("");
 const passwordCheckInput = ref("");
 const emailInput = ref("");
@@ -10,7 +10,7 @@ const hasAccount = ref(true);
 
 const passwordIsVisible = ref(false);
 
-const usersStore = UseUsersStore();
+const usersStore = useUsersStore();
 
 const router = useRouter();
 const message = ref("");

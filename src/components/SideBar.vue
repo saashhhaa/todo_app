@@ -8,7 +8,7 @@ const categoriesStore = useCategoriesStore();
 
 const categotyTitle = ref("");
 const categoryColor = ref("#1a9185");
-const categoryCount = ref("0");
+const categoryCount = ref(0);
 
 const cantAddMore = ref(false)
 

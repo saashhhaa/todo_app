@@ -75,9 +75,6 @@ export const useCategoriesStore = defineStore("categories", {
         count: categoryCount,
       };
       this.categories.push(newCategory);
-    },
-    handleAmount(tasksAmount){
-
     }
   },
 });

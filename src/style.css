@@ -17,6 +17,10 @@ body{
   justify-content: center;
 }
 
+button {
+  cursor: pointer;
+}
+
 span {
   color: var(--accent-color);
 }

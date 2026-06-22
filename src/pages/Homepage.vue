@@ -25,10 +25,6 @@ const sideBarIsVisible = ref(true);
   />
 </template>
 
-<!-- {{ props.currentUser?.username }}
-    <RouterLink to="/">
-       <button >back</button> 
-    </RouterLink> -->
 
 <style scoped>
 .homepage {

@@ -40,40 +40,76 @@ export const useUsersStore = defineStore("users", {
       this.currentUser = null;
     },
     editUser(newImage, newUsername) {
-      this.currentUser.username = newUsername
-      this.currentUser.image = newImage
+      this.currentUser.username = newUsername;
+      this.currentUser.image = newImage;
     },
   },
 });
+
 
 export const useCategoriesStore = defineStore("categories", {
   state: () => ({
     categories: [
       {
-        color: "#F9A109",
+        color: "#ffb32f",
         title: "work",
-        count: 1
+        count: 0,
       },
       {
-        color: "#4CAF50",
+        color: "#7fde82",
         title: "study",
-        count: 2
+        count: 0,
       },
       {
-        color: "#9C27B0",
+        color: "#d574e6",
         title: "personal",
-        count: 2
+        count: 0,
       },
     ],
   }),
   actions: {
     addCategory(categotyTitle, categoryColor, categoryCount) {
-        const newCategory = {
-          title: categotyTitle,
-          color: categoryColor,
-          count: categoryCount,
-        };
-        this.categories.push(newCategory);
+      const newCategory = {
+        title: categotyTitle,
+        color: categoryColor,
+        count: categoryCount,
+      };
+      this.categories.push(newCategory);
     },
+    handleAmount(tasksAmount){
+
+    }
+  },
+});
+
+export const useTasksSStore = defineStore("tasks", {
+  state: () => ({
+    tasks: [],
+  }),
+  actions: {
+    createNewTask(newTitle, newDate, newCategory) {
+      const categories = useCategoriesStore();
+
+      const found = categories.categories.find((c) => c.title == newCategory);
+      const newTask = {
+        id: this.tasks.length + 1,
+        title: newTitle,
+        date: newDate,
+        category: newCategory,
+        catCol: found.color,
+        isDone: false,
+      };
+      this.tasks.push(newTask);
+    },
+    deleteTask(taskToDelete) {
+      this.tasks = this.tasks.filter((task) => task.id != taskToDelete);
+    },
+    switchTaskState(taskId){
+      const taskToChange = this.tasks.find(task => task.id == taskId)
+      taskToChange.isDone = !taskToChange.isDone
+    },
+    // deleteDoneTasks(){
+
+    // }
   },
 });

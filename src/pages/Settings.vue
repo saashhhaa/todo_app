@@ -4,13 +4,14 @@ import { useUsersStore } from "../stores/store";
 
 const usersStore = useUsersStore();
 const newUsernameInput = ref("");
-const previewImage = ref(""); 
-const editMode = ref(false)
+const previewImage = ref("");
+const editMode = ref(false);
 
 watch(editMode, (newValue) => {
   if (newValue) {
     newUsernameInput.value = usersStore.currentUser?.username || "";
-    previewImage.value = usersStore.currentUser?.image || "/public/profileImageTest.jpg";
+    previewImage.value =
+      usersStore.currentUser?.image || "/public/profileImageTest.jpg";
   }
 });
 
@@ -20,15 +21,15 @@ function handleFileChange(event) {
 
   const reader = new FileReader();
   reader.onload = (e) => {
-    // Сохраняем строку картинки для отображения в круге
     previewImage.value = e.target.result;
   };
   reader.readAsDataURL(file);
 }
 const emit = defineEmits(["close"]);
 
-function editUser (){
-
+function editUser() {
+  usersStore.editUser(previewImage.value, newUsernameInput.value)
+  editMode.value = false
 }
 </script>
 
@@ -48,31 +49,42 @@ function editUser (){
       <h3>Account</h3>
       <div class="cover">
         <div class="profileImage" v-if="!editMode">
-          <img :src="usersStore.currentUser?.image || '/public/profileImageTest.jpg'" alt="Avatar" />
+          <img
+            :src="
+              usersStore.currentUser?.image || '/public/profileImageTest.jpg'
+            "
+            alt="Avatar"
+          />
         </div>
 
         <label v-else class="profileImageUpload">
           <img :src="previewImage" alt="Preview" />
           <div class="uploadOverlay">edit</div>
-          <input type="file" @change="handleFileChange" accept="image/*" class="hiddenFileInput">
+          <input
+            type="file"
+            @change="handleFileChange"
+            accept="image/*"
+            class="hiddenFileInput"
+          />
         </label>
         <div>
-          <div v-if="!editMode" class="username">{{ usersStore.currentUser?.username }}</div>
-          <input type="text" v-else>
+          <div v-if="!editMode" class="username">
+            {{ usersStore.currentUser?.username }}
+          </div>
+          <input v-model="newUsernameInput" type="text" v-else />
           <div class="email">{{ usersStore.currentUser?.email }}</div>
         </div>
-      <button v-if="!editMode" @click="editMode=true" class="editButton">edit<img src="/penIcon.svg" alt="" /></button>
-      <div v-else class="cover2">
-         <button @click="editUser" class="editButton save" >∨</button>
-        <button @click="editMode=false" class="editButton cancel">×</button>
+        <button v-if="!editMode" @click="editMode = true" class="editButton">
+          edit<img src="/penIcon.svg" alt="" />
+        </button>
+        <div v-else class="cover2">
+          <button @click="editUser" class="editButton save">∨</button>
+          <button @click="editMode = false" class="editButton cancel">×</button>
+        </div>
       </div>
-       
-      </div>
-
     </div>
     <div class="todoSettings">
       <h3>Todo settings</h3>
-
     </div>
   </div>
 </template>
@@ -83,20 +95,23 @@ function editUser (){
   justify-content: center;
   gap: 10px;
 }
-button.save,button.cancel  {
+button {
+  cursor: pointer;
+}
+
+button.save,
+button.cancel {
   filter: brightness(0.7);
   margin-left: 0;
-
 }
 button.save {
   border: 1px solid rgb(105, 232, 105);
-  color: rgb(88, 206, 88)
+  color: rgb(88, 206, 88);
 }
 button.cancel {
   border: 1px solid rgb(202, 94, 94) !important;
-  color: rgb(187, 87, 87) !important
+  color: rgb(187, 87, 87) !important;
 }
-
 
 .account {
   margin-top: 5vh;
@@ -172,7 +187,7 @@ img:hover {
   filter: brightness(1);
 }
 
-input[type='text']{
+input {
   flex: 2;
   outline: none;
   font-size: 16px;
@@ -181,8 +196,12 @@ input[type='text']{
   border-radius: 10px;
   background-color: var(--blackTheme-back-secondary);
   color: white;
+  margin-bottom: 20px;
 }
 
+input:hover{
+  border: 1px solid var(--accent-color);
+}
 
 .profileImage {
   width: 70px;
@@ -229,7 +248,6 @@ input[type='text']{
 .profileImageUpload:hover .uploadOverlay {
   opacity: 1;
   border: 50px;
-
 }
 
 .profileImageUpload:hover img {

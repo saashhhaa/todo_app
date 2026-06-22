@@ -1,9 +1,10 @@
 <script setup lang="js">
-import { useUsersStore } from "../stores/store";
+import { useTasksSStore, useUsersStore } from "../stores/store";
 
 const usersStore = useUsersStore();
-
+const tasks = useTasksSStore()
 import { computed } from "vue";
+import TasksManager from "./TasksManager.vue";
 
 const formattedDate = computed(() => {
   const today = new Date();
@@ -13,25 +14,60 @@ const formattedDate = computed(() => {
     month: "long",
   }).format(today);
 });
+
+function  deleteAllDone (){
+  tasks.tasks = tasks.tasks.filter((task)=>!task.isDone)
+}
 </script>
 
 <template>
   <div class="main">
     <div class="cover">
-    <div class="greeting">
-      <div class="profileImage"></div>
-      <div class="block">
-        <h1>TodoApp</h1>
-        <p class="current-user-greeting">Hello {{ usersStore.currentUser?.username }}!</p>
+      <div class="greeting">
+        <!-- <div class="profileImage"></div> -->
+        <img
+          :src="usersStore.currentUser?.image || '/public/profileImageTest.jpg'"
+          class="profileImage"
+        />
+        <div class="block">
+          <h1>TodoApp</h1>
+          <p class="current-user-greeting">
+            Hello {{ usersStore.currentUser?.username }}!
+          </p>
+        </div>
       </div>
+      <div class="date">{{ formattedDate }}</div>
     </div>
-    <div class="date">{{ formattedDate }}</div>
+    <TasksManager />
+    <button @click="deleteAllDone" class="deleteAll">delete done tasks <img src="/deleteIcon.svg" alt=""></button>
   </div>
-  </div>
-  
 </template>
 
 <style scoped>
+.deleteAll {
+  position: absolute;
+  bottom: 20px;
+  right: 40px;
+  background-color: transparent;
+  border: 1px solid rgb(255, 118, 118);
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 10px;
+  display: flex;
+  gap: 10px;
+  color: rgb(255, 118, 118);
+  align-items: center;
+}
+
+.deleteAll:hover {
+  filter: brightness(1.2);
+}
+
+.deleteAll img {
+  width: 25px;
+  height: 25px;
+}
+
 .date {
   font-weight: 700;
   filter: brightness(0.5);
@@ -39,20 +75,17 @@ const formattedDate = computed(() => {
 }
 .main {
   /* color: black; */
-  width: 70vw;
-  margin:  5vh 5vw 0 2vw;
+  width: 100%;
+  margin: 5vh 5vw 0 2vw;
   padding: 2vh 3vw;
+  
   /* background-color: antiquewhite; */
 }
 
 .profileImage {
   border-radius: 100px;
-  width: 70px;
+  width: 73px;
   height: 70px;
-  background-image: url('/public/profileImageTest.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
 }
 
 .cover {
@@ -62,6 +95,7 @@ const formattedDate = computed(() => {
   align-items: center;
   padding-bottom: 2vh;
   border-bottom: 1px solid rgb(92, 94, 117);
+  
 }
 
 .greeting {
@@ -70,7 +104,6 @@ const formattedDate = computed(() => {
 }
 
 .current-user-greeting {
-  filter:brightness(0.6)
+  filter: brightness(0.6);
 }
-
 </style>

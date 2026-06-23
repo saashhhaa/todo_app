@@ -2,7 +2,7 @@
 import { useTasksSStore, useUsersStore } from "../stores/store";
 
 const usersStore = useUsersStore();
-const tasks = useTasksSStore()
+const tasks = useTasksSStore();
 import { computed } from "vue";
 import TasksManager from "./TasksManager.vue";
 
@@ -15,8 +15,9 @@ const formattedDate = computed(() => {
   }).format(today);
 });
 
-function  deleteAllDone (){
-  tasks.tasks = tasks.tasks.filter((task)=>!task.isDone)
+function deleteAllDone() {
+  tasks.tasks = tasks.tasks.filter((task) => !task.isDone);
+  localStorage.setItem("tasks", JSON.stringify(tasks.tasks));
 }
 </script>
 
@@ -39,7 +40,9 @@ function  deleteAllDone (){
       <div class="date">{{ formattedDate }}</div>
     </div>
     <TasksManager />
-    <button @click="deleteAllDone" class="deleteAll">delete done tasks <img src="/deleteIcon.svg" alt=""></button>
+    <button @click="deleteAllDone" class="deleteAll">
+      delete done tasks <img src="/deleteIcon.svg" alt="" />
+    </button>
   </div>
 </template>
 
@@ -78,7 +81,7 @@ function  deleteAllDone (){
   width: 100%;
   margin: 5vh 5vw 0 2vw;
   padding: 2vh 3vw;
-  
+
   /* background-color: antiquewhite; */
 }
 
@@ -95,7 +98,6 @@ function  deleteAllDone (){
   align-items: center;
   padding-bottom: 2vh;
   border-bottom: 1px solid rgb(92, 94, 117);
-  
 }
 
 .greeting {

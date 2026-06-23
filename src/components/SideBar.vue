@@ -1,105 +1,121 @@
 <script setup>
 import { ref } from "vue";
 import Category from "./Category.vue";
-import { useCategoriesStore } from "../stores/store.js";
+import {
+  useCategoriesStore,
+  useTasksSStore,
+  useUsersStore,
+} from "../stores/store.js";
 import Settings from "../pages/Settings.vue";
 
 const categoriesStore = useCategoriesStore();
-
+const users = useUsersStore();
 const categotyTitle = ref("");
 const categoryColor = ref("#1a9185");
-const categoryCount = ref(0);
+const tasksStore = useTasksSStore();
+const newCategoryFormVisible = ref(false);
+const cantAddMore = ref(false);
+const isSettings = ref(false);
 
-const cantAddMore = ref(false)
-
-const modalIsVisible = ref(false);
-
-const isSettings = ref(false)
+function getTaskCount(categoryTitle) {
+  return tasksStore.tasks.filter(
+    (task) => task.userId === users.currentUser?.id && task.category === categoryTitle
+  ).length;
+}
 
 function addCategory() {
-  if(categoriesStore.categories.length > 4){
-    cantAddMore.value = true
-  }
-  else if (categotyTitle.value.trim() == "") {
-    modalIsVisible.value = false;
+  if (categotyTitle.value.trim() == "") {
+    newCategoryFormVisible.value = false;
     return;
   } else {
-    categoriesStore.addCategory(categotyTitle.value, categoryColor.value, categoryCount.value);
+    categoriesStore.addCategory(categotyTitle.value, categoryColor.value);
   }
   categotyTitle.value = "";
   categoryColor.value = "#1a9185";
-  modalIsVisible.value = false;
+  newCategoryFormVisible.value = false;
 }
 </script>
 
 <template>
   <div class="sideBar">
     <div class="top">
-
-    <div class="search">
-      <img src="/searchIcon.svg" alt="" />
-      <input type="text" placeholder="search task by name" />
-    </div>
+      <div class="search">
+        <img src="/searchIcon.svg" alt="" />
+        <input type="text" placeholder="search task by name" />
+      </div>
       <div class="categories">
-      <h2>Categories</h2>
-      <div class="categories_list">
-        <Category
-          v-for="category in categoriesStore.categories"
-          :key="category.title"
-          :title="category.title"
-          :color="category.color"
-          :count="category.count"
-        />
+        <h2>Categories</h2>
+        <div class="categories_list">
+          <Category
+            v-for="category in categoriesStore.categories"
+            @click="tasksStore.selectCategory(category.title)"
+            :key="category.title"
+            :title="category.title"
+            :color="category.color"
+            :count="getTaskCount(category.title)"
+            :class="{ active: tasksStore.selectedCategory === category.title }"
+          />
+          <Category
+            v-if="categoriesStore.customCategories.length"
+            v-for="category in categoriesStore.customCategories.filter(
+              (cat) => cat.userId == users.currentUser.id,
+            )"
+            @click="tasksStore.selectCategory(category.title)"
+            :key="category.id"
+            :id="category.id"
+            :title="category.title"
+            :color="category.color"
+            :count="getTaskCount(category.title)"
+            :isCustom="category.isCustom"
+            :class="{ active: tasksStore.selectedCategory === category.title }"
+          />
+        </div>
+        <button
+          v-if="
+            !newCategoryFormVisible &&
+            categoriesStore.customCategories.length != 5
+          "
+          @click="newCategoryFormVisible = true"
+          class="add-category-button"
+        >
+          add category <span>+</span>
+        </button>
+        <div v-if="newCategoryFormVisible" class="addCategory_input">
+          <input
+            type="text"
+            id="categoryTitle"
+            v-model="categotyTitle"
+            placeholder="Category title"
+            class="categoryInput"
+          />
+          <input type="color" id="categoryColor" v-model="categoryColor" />
+          <button @click="addCategory">+</button>
+        </div>
       </div>
-      <button
-        v-if="!modalIsVisible"
-        @click="modalIsVisible = true"
-        :class="cantAddMore ? 'add-category-button disabled' :'add-category-button'"
-      >
-        add category <span>+</span>
-      </button>
-      <div v-else class="addCategory_input">
-        <input
-          type="text"
-          id="categoryTitle"
-          v-model="categotyTitle"
-          placeholder="Category title"
-          class="categoryInput"
-        />
-        <input type="color" id="categoryColor" v-model="categoryColor" />
-        <button @click="addCategory">+</button>
-      </div>
+      <!-- <div class="calendar">
+        <h2>Calendar</h2>
+        <div>тута буде календар</div>
+      </div> -->
     </div>
-    <div class="calendar">
-      <h2>Calendar</h2>
-      <div>тута буде календар</div>
-    </div>
-    </div>
-    
 
     <div class="sideBarButtons">
-      <!-- <RouterLink to="/settings"> -->
-        <button @click="isSettings = true" class="linkToPage">
-          <div>settings</div>
-          <img src="/settingsIcon.svg" alt="" />
+      <button @click="isSettings = true" class="linkToPage">
+        <div>settings</div>
+        <img src="/settingsIcon.svg" alt="" />
+      </button>
+        <button @click="" class="linkToPage">
+          <div>eng</div>
+          <img src="/languageIcon.svg" alt="" />
         </button>
-      <!-- </RouterLink> -->
-      <RouterLink to="/allTasks">
-        <button class="linkToPage">
-          <div>all tasks</div>
-          <img src="/tasksIcon.svg" alt="" />
-        </button>
-      </RouterLink>
     </div>
   </div>
 
   <div v-if="isSettings" class="modal">
-    <Settings @close="isSettings=false" />
+    <Settings @close="isSettings = false" />
   </div>
 </template>
 
 <style scoped>
-
 .modal {
   position: absolute;
   top: 0;
@@ -120,10 +136,9 @@ function addCategory() {
   margin-top: 10px;
 }
 
-.add-category-button.disabled{
+.add-category-button.disabled {
   display: none;
 }
-
 .addCategory_input input[type="text"] {
   flex: 2;
   outline: none;
@@ -158,7 +173,6 @@ function addCategory() {
 .addCategory_input input[type="text"]:hover {
   border: 1px solid var(--accent-color);
 }
-
 
 img {
   width: 20px;

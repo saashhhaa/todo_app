@@ -2,24 +2,26 @@
 import { useCategoriesStore, useTasksSStore } from "../stores/store";
 
 const props = defineProps({
-  id: Number,
-  title: String,
-  category: String,
-  catColor: String,
-  date: String,
-  isDone: Boolean,
+  id: { type: Number },
+  title: { type: String },
+  category: { type: String },
+  catColor: { type: String },
+  date: { type: String, required: false },
+  isDone: { type: Boolean },
 });
 
 const tasks = useTasksSStore();
-const categories = useCategoriesStore()
+const categories = useCategoriesStore();
 
-function deleteTask (){
-tasks.deleteTask(props.id)
-const catAmount = categories.categories.find(
+function deleteTask() {
+  tasks.deleteTask(props.id);
+  const catAmount = categories.categories.find(
     (cat) => cat.title == props.category,
   );
   catAmount.count -= 1;
 }
+
+
 </script>
 
 <template>
@@ -41,7 +43,7 @@ const catAmount = categories.categories.find(
             ></div>
             {{ props.category }}
           </div>
-          <div class="date">
+          <div v-if="props.date!='No date'" class="date">
             <img src="/calendarIcon.svg" />
             <div class="">{{ props.date }}</div>
           </div>
@@ -49,28 +51,28 @@ const catAmount = categories.categories.find(
       </div>
     </div>
 
-    <img
-      @click="deleteTask"
-      class="deleteTask"
-      src="/deleteIcon.svg"
-    />
+    <img @click="deleteTask" class="deleteTask" src="/deleteIcon.svg" />
   </div>
 </template>
 
 <style scoped>
-
 .done {
-    filter: brightness(0.9);
+  filter: brightness(0.9);
+  background-color: rgba(89, 162, 134, 0.355) !important;
+  color: rgb(126, 245, 197);
+}
+
+.done .category {
+  filter: brightness(0.6);
 }
 
 .done .taskTitle {
-    text-decoration: line-through;
+  text-decoration: line-through;
   filter: brightness(0.6);
-    
 }
 
-.done:hover{
-    filter: brightness(1) !important;
+.done:hover {
+  filter: brightness(1) !important;
 }
 
 .doneButton {

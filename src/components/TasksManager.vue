@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useCategoriesStore, useTasksSStore } from "../stores/store.js";
+import {
+  useCategoriesStore,
+  useTasksSStore,
+  useUsersStore,
+} from "../stores/store.js";
 import Filter from "./Filter.vue";
 import TaskCard from "./TaskCard.vue";
 const newTaskTitle = ref("");
@@ -15,47 +19,55 @@ const todayDate = computed(() => {
   }).format(today);
 });
 
+const users = useUsersStore();
 const categories = useCategoriesStore();
 const tasks = useTasksSStore();
 
 const currentMode = ref("all");
 function switchModes(mode) {
   currentMode.value = mode;
+  if (mode == "all") {
+    tasks.clearCategory();
+  }
 }
 const filteredTasks = computed(() => {
-  if (currentMode.value == "active") {
-    return tasks.tasks.filter((task) => !task.isDone);
-  } else if (currentMode.value == "done") {
-    return tasks.tasks.filter((task) => task.isDone);
-  } else if (currentMode.value == "all") {
-    return tasks.tasks;
-  } else if (currentMode.value == "today") {
-    return tasks.tasks.filter((task) => task.date == todayDate.value);
+  let result = tasks.tasks.filter((task) => task.userId === users.currentUser.id);
+
+  if (tasks.selectedCategory) {
+    result = result.filter((task) => task.category === tasks.selectedCategory);
   }
+  if (currentMode.value === "active") {
+    return result.filter((task) => !task.isDone); 
+  } else if (currentMode.value === "done") {
+    return result.filter((task) => task.isDone);
+  } else if (currentMode.value === "today") {
+    return result.filter((task) => task.date === todayDate.value);
+  }
+  return result;
+});
+
+const availableCategories = computed(() => {
+  const currentUserId = users.currentUser.id;
+  const currCustomCategories = categories.customCategories.filter(
+    (category) => category.userId == currentUserId,
+  );
+  return [...categories.categories, ...currCustomCategories];
 });
 
 function createNewTask() {
-  if (newTaskTitle.value == "" || newTaskDate.value == null) {
-    return;
-  } else {
-    const dateObj = new Date(newTaskDate.value);
+  if (newTaskTitle.value.trim() === "") return;
 
-    const formattedDate = new Intl.DateTimeFormat("en-US", {
+  let formattedDate = "No date";
+
+  if (newTaskDate.value) {
+    const dateObj = new Date(newTaskDate.value);
+    formattedDate = new Intl.DateTimeFormat("en-US", {
       day: "numeric",
       month: "long",
     }).format(dateObj);
-
-    tasks.createNewTask(
-      newTaskTitle.value,
-      formattedDate,
-      newTaskCategory.value,
-    );
   }
-  const catAmount = categories.categories.find(
-    (cat) => cat.title == newTaskCategory.value,
-  );
-  catAmount.count += 1;
 
+  tasks.createNewTask(newTaskTitle.value, formattedDate, newTaskCategory.value);
   newTaskTitle.value = "";
   newTaskDate.value = "";
 }
@@ -67,20 +79,18 @@ function createNewTask() {
       <input type="text" placeholder="new task title" v-model="newTaskTitle" />
       <div class="date">
         <label for="date"><img src="/calendarIcon.svg" alt="" /></label>
-        <input v-model="newTaskDate" type="date" name="" id="date" required/>
+        <input v-model="newTaskDate" type="date" name="" id="date" required />
       </div>
       <div class="categorySwitch">
         <label for="category"><img src="/categoryIcon.svg" alt="" /></label>
         <select v-model="newTaskCategory" name="category" id="">
           <option
-            v-for="category in categories.categories"
+            v-for="category in availableCategories"
             :key="category.title"
             :value="category.title"
           >
             {{ category.title }}
           </option>
-
-          <!-- <option value="">fdf</option> -->
         </select>
       </div>
 
@@ -92,6 +102,7 @@ function createNewTask() {
     <h3 v-if="currentMode == 'today'">Today tasks</h3>
     <h3 v-if="currentMode == 'done'">Done tasks</h3>
     <h3 v-if="currentMode == 'active'">Active tasks</h3>
+    <!-- <h3 v-if="currentMode == 'active'">Active tasks</h3> -->
 
     <div v-if="filteredTasks.length > 0" class="grid">
       <TaskCard
@@ -102,7 +113,9 @@ function createNewTask() {
         :date="task.date"
         :catColor="task.catCol"
         :isDone="task.isDone"
-        v-for="task in filteredTasks"
+        v-for="task in filteredTasks.filter(
+          (task) => task.userId == users.currentUser.id,
+        )"
       />
     </div>
 
@@ -111,13 +124,12 @@ function createNewTask() {
 </template>
 
 <style scoped>
-
 .grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    max-height: 45vh;
-    overflow-y: auto;
-    /* background-color: aqua; */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  max-height: 45vh;
+  overflow-y: auto;
+  /* background-color: aqua; */
 }
 
 .taskManager {
@@ -187,7 +199,7 @@ input:hover {
 }
 
 .createTask button:hover {
-  box-shadow: 0 0 10px  var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-color);
 }
 .message {
   filter: brightness(0.5);

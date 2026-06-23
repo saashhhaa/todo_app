@@ -28,8 +28,11 @@ function handleFileChange(event) {
 const emit = defineEmits(["close"]);
 
 function editUser() {
-  usersStore.editUser(previewImage.value, newUsernameInput.value)
-  editMode.value = false
+  usersStore.editUser(previewImage.value, newUsernameInput.value);
+  editMode.value = false;
+}
+function logOut() {
+  usersStore.logout();
 }
 </script>
 
@@ -85,7 +88,15 @@ function editUser() {
     </div>
     <div class="todoSettings">
       <h3>Todo settings</h3>
+      <p>Theme</p>
+      <div class="coverTheme">
+        <button class="light theme">Light</button>
+        <button class="dark theme">Dark</button>
+      </div>
     </div>
+    <RouterLink to="/">
+      <button @click="logOut" class="logOut error">log out</button>
+    </RouterLink>
   </div>
 </template>
 
@@ -97,6 +108,45 @@ function editUser() {
 }
 button {
   cursor: pointer;
+}
+
+.coverTheme {
+  display: flex;
+  gap: 10px;
+  margin:20px 0 10vh 0;
+}
+
+.light {
+  background-color: white;
+  color: rgb(43, 48, 80);
+}
+
+.dark {
+  background-color: rgb(24, 20, 60);
+  color: white;
+  border: 2px rgba(255, 255, 255, 0.36) solid !important;
+}
+
+.theme:hover{
+  filter: brightness(0.5);
+}
+
+.theme {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  /* margin-top: 20vh; */
+}
+
+.logOut {
+  padding: 10px 20px;
+  border-radius: 50px;
+  background-color: transparent;
+  font-size: 16px;
+  /* margin-top: 20vh; */
+  border: 1px solid rgb(255, 118, 118);
+  color: rgb(255, 118, 118);
 }
 
 button.save,
@@ -199,7 +249,7 @@ input {
   margin-bottom: 20px;
 }
 
-input:hover{
+input:hover {
   border: 1px solid var(--accent-color);
 }
 

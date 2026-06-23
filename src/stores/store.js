@@ -2,16 +2,8 @@ import { defineStore } from "pinia";
 
 export const useUsersStore = defineStore("users", {
   state: () => ({
-    users: [
-      {
-        id: Date.now(),
-        username: "test",
-        password: "password",
-        email: "email@gmail.com",
-        image: "../public/profileImageTest.jpg",
-      },
-    ],
-    currentUser: null,
+    users: JSON.parse(localStorage.getItem("users")) || [],
+    currentUser: JSON.parse(localStorage.getItem("currentUser")) || null,
   }),
   actions: {
     registerUser(username, password, email) {
@@ -24,6 +16,8 @@ export const useUsersStore = defineStore("users", {
       };
       this.users.push(newUser);
       this.currentUser = newUser;
+      localStorage.setItem("currentUser", JSON.stringify(newUser));
+      localStorage.setItem("users", JSON.stringify(this.users));
     },
     loginUser(username, password) {
       const foundUser = this.users.find(
@@ -31,6 +25,8 @@ export const useUsersStore = defineStore("users", {
       );
       if (foundUser) {
         this.currentUser = foundUser;
+        localStorage.setItem("currentUser", JSON.stringify(foundUser));
+
         return true;
       } else {
         return false;
@@ -38,14 +34,16 @@ export const useUsersStore = defineStore("users", {
     },
     logout() {
       this.currentUser = null;
+      localStorage.removeItem("currentUser");
     },
     editUser(newImage, newUsername) {
       this.currentUser.username = newUsername;
       this.currentUser.image = newImage;
+      localStorage.setItem("currentUser", JSON.stringify(this.currentUser));
+      localStorage.setItem("users", JSON.stringify(this.users));
     },
   },
 });
-
 
 export const useCategoriesStore = defineStore("categories", {
   state: () => ({
@@ -54,59 +52,86 @@ export const useCategoriesStore = defineStore("categories", {
         color: "#ffb32f",
         title: "work",
         count: 0,
+        isCustom: false,
       },
       {
         color: "#7fde82",
         title: "study",
         count: 0,
+        isCustom: false,
       },
       {
         color: "#d574e6",
         title: "personal",
         count: 0,
+        isCustom: false,
       },
     ],
+    customCategories: JSON.parse(localStorage.getItem("categories")) || [],
   }),
   actions: {
-    addCategory(categotyTitle, categoryColor, categoryCount) {
+    addCategory(categotyTitle, categoryColor) {
+      const users = useUsersStore();
       const newCategory = {
+        id: Date.now(),
+        userId: users.currentUser.id,
         title: categotyTitle,
         color: categoryColor,
-        count: categoryCount,
+        count: 0,
+        isCustom: true,
       };
-      this.categories.push(newCategory);
-    }
+      this.customCategories.push(newCategory);
+      localStorage.setItem("categories", JSON.stringify(this.customCategories));
+    },
+    deleteCategory(categoryId) {
+      this.customCategories = this.customCategories.filter(
+        (category) => category.id != categoryId,
+      );
+      localStorage.setItem("categories", JSON.stringify(this.customCategories));
+    },
   },
 });
 
 export const useTasksSStore = defineStore("tasks", {
   state: () => ({
-    tasks: [],
+    tasks: JSON.parse(localStorage.getItem("tasks")) || [],
+    selectedCategory: null
   }),
   actions: {
     createNewTask(newTitle, newDate, newCategory) {
       const categories = useCategoriesStore();
-
-      const found = categories.categories.find((c) => c.title == newCategory);
+      const users = useUsersStore();
+      const found = categories.customCategories.find((c) => c.title == newCategory)|| categories.categories.find((c) => c.title == newCategory);
       const newTask = {
-        id: this.tasks.length + 1,
+        id: Date.now(),
+        userId: users.currentUser.id || null,
         title: newTitle,
-        date: newDate,
+        date: newDate || 'No date',
         category: newCategory,
-        catCol: found.color,
+        catCol: found ? found.color: '#fffff',
         isDone: false,
       };
       this.tasks.push(newTask);
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
     },
     deleteTask(taskToDelete) {
       this.tasks = this.tasks.filter((task) => task.id != taskToDelete);
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
     },
-    switchTaskState(taskId){
-      const taskToChange = this.tasks.find(task => task.id == taskId)
-      taskToChange.isDone = !taskToChange.isDone
+    switchTaskState(taskId) {
+      const taskToChange = this.tasks.find((task) => task.id == taskId);
+      taskToChange.isDone = !taskToChange.isDone;
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
     },
-    // deleteDoneTasks(){
-
-    // }
+    selectCategory(categoryTitle){
+      if(this.selectedCategory==categoryTitle){
+        this.selectedCategory = null;
+      }else{
+        this.selectedCategory = categoryTitle
+      }
+    },
+    clearCategory(){
+      this.selectedCategory=null
+    }
   },
 });

@@ -16,6 +16,7 @@ const router = useRouter();
 const message = ref("");
 
 function createUsers() {
+  const isNameTaken = usersStore.users?.some((user) => user.username == usernameInput.value)
   if (
     usernameInput.value.trim().length > 1 &&
     passwordInput.value.trim().length < 6 
@@ -31,7 +32,10 @@ function createUsers() {
     message.value = "usersname must be at least 1 symbol";
   } else if (emailInput.value.trim().length == 0 || usernameInput.value.trim().length == 0 || passwordInput.value.trim().length == 0) {
     message.value = "please, write your data";
-  } else {
+  } else if (isNameTaken){
+    message.value = "this username is taken";
+  } 
+  else {
     usersStore.registerUser(
       usernameInput.value.trim(),
       passwordInput.value.trim(),
@@ -276,11 +280,6 @@ button:hover {
   gap: 10px;
 }
 
-.error {
-  color: rgb(255, 118, 118);
-  font-weight: 300;
-  text-align: center;
-}
 
 .switch-login-link {
   text-align: center;

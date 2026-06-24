@@ -43,7 +43,7 @@ function deleteTask() {
             ></div>
             {{ props.category }}
           </div>
-          <div v-if="props.date!='No date'" class="date">
+          <div v-if="props.date!=null" class="date">
             <img src="/calendarIcon.svg" />
             <div class="">{{ props.date }}</div>
           </div>

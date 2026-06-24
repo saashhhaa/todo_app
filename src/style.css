@@ -25,6 +25,8 @@ span {
   color: var(--accent-color);
 }
 
+
+
 :root{
 --blackTheme-font: white;
 --blackTheme-back:rgb(40 42 61); 
@@ -37,4 +39,61 @@ span {
   color: rgb(255, 118, 118);
   font-weight: 300;
   text-align: center;
+}
+body.light-theme {
+  --blackTheme-font: rgb(40, 42, 61);             
+  --blackTheme-back: rgba(240, 242, 245, 0.573);
+  --blackTheme-back-secondary: rgba(255, 255, 255, 0.389);
+  --blackTheme-back-secondary2: rgb(220, 222, 235);
+  --accent-color: #d67f13; 
+}
+
+body.light-theme img{
+  filter: brightness(0.6);
+}
+
+body.light-theme img:hover{
+  filter: brightness(0.7) !important;
+}
+
+
+body.light-theme .profileImage {
+  filter: brightness(1);
+}
+
+body.light-theme .tasksAmount {
+  filter: brightness(0.5);
+}
+
+body.light-theme .filterMode {
+  color: rgb(49, 49, 68);
+  border: 1px solid rgba(0, 0, 0, 0.326);
+}
+
+.body.light-theme .linkToPage{
+  filter: brightness(1.5) !important;
+  background-color: #e18f23 !important;
+}
+
+.body.light-theme input::placeholder{
+  color: black !important;
+}
+
+.body.light-theme input, select{
+  color: rgba(0, 0, 0, 0.555) !important;
+}
+
+.activeDone {
+  border: 1px solid rgb(98, 219, 98);
+  color: rgb(98, 219, 98);
+}
+
+.activeActive {
+  border: 1px solid rgb(228, 192, 12);
+  color: rgb(228, 192, 12);
+}
+
+.activeAll {
+  border: 1px solid rgb(67, 146, 237);
+  color: rgb(102, 167, 241);
 }

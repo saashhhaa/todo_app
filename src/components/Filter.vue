@@ -1,6 +1,8 @@
 <script setup>
 import { defineEmits, ref } from "vue";
+import { useI18n } from "vue-i18n";
 const emit = defineEmits(["switchModes"]);
+const {t} = useI18n()
 const props = defineProps({
   tasks: Array,
 });
@@ -20,29 +22,29 @@ function changeMode(mode) {
         @click="changeMode('today')"
         :class="currMode == 'today' ? 'filterMode activeToday' : 'filterMode'"
       >
-        today
+        {{$t('taskManager.filterToday') }}
       </button>
       <img src="/filterIcon.svg" alt="" />
       <button
         @click="changeMode('all')"
         :class="currMode == 'all' ? 'filterMode activeAll' : 'filterMode'"
       >
-        all
+        {{ $t('taskManager.filterAll') }}
       </button>
       <button
         @click="changeMode('active')"
         :class="currMode == 'active' ? 'filterMode activeActive' : 'filterMode'"
       >
-        active
+        {{ $t('taskManager.filterActive')}}
       </button>
       <button
         @click="changeMode('done')"
         :class="currMode == 'done' ? 'filterMode  activeDone' : 'filterMode'"
       >
-        done
+        {{ $t('taskManager.filterDone') }}
       </button>
     </div>
-    <p class="tasksAmount">{{ tasks.length }} tasks</p>
+    <p class="tasksAmount">{{ tasks.length }} {{ $t('taskManager.tasks') }}</p>
   </div>
 </template>
 

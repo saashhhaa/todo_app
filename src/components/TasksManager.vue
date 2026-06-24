@@ -7,16 +7,21 @@ import {
 } from "../stores/store.js";
 import Filter from "./Filter.vue";
 import TaskCard from "./TaskCard.vue";
+import { useI18n } from "vue-i18n";
 const newTaskTitle = ref("");
 const newTaskDate = ref(null);
 const newTaskCategory = ref("work");
 
+const { t } = useI18n();
+
 const todayDate = computed(() => {
   const today = new Date();
-  return new Intl.DateTimeFormat("en-US", {
-    day: "numeric",
-    month: "long",
-  }).format(today);
+  const yyyy = today.getFullYear();
+  
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+  const dd = String(today.getDate()).padStart(2, '0');
+  
+  return `${yyyy}-${mm}-${dd}`; 
 });
 
 const users = useUsersStore();
@@ -31,13 +36,15 @@ function switchModes(mode) {
   }
 }
 const filteredTasks = computed(() => {
-  let result = tasks.tasks.filter((task) => task.userId === users.currentUser.id);
+  let result = tasks.tasks.filter(
+    (task) => task.userId === users.currentUser.id,
+  );
 
   if (tasks.selectedCategory) {
     result = result.filter((task) => task.category === tasks.selectedCategory);
   }
   if (currentMode.value === "active") {
-    return result.filter((task) => !task.isDone); 
+    return result.filter((task) => !task.isDone);
   } else if (currentMode.value === "done") {
     return result.filter((task) => task.isDone);
   } else if (currentMode.value === "today") {
@@ -54,20 +61,29 @@ const availableCategories = computed(() => {
   return [...categories.categories, ...currCustomCategories];
 });
 
+const {locale} = useI18n()
+
+function formatTaskDate(rawDate) {
+  if (!rawDate) return "";
+
+  const dateObj = new Date(rawDate);
+  const currentLocale = locale.value === "en" ? "en-US" : "ru-RU";
+if (isNaN(dateObj.getTime())) return null;
+  return new Intl.DateTimeFormat(currentLocale, {
+    day: "numeric",
+    month: "long",
+  }).format(dateObj);
+}
+
 function createNewTask() {
   if (newTaskTitle.value.trim() === "") return;
 
-  let formattedDate = "No date";
+  tasks.createNewTask(
+    newTaskTitle.value,
+    newTaskDate.value ? newTaskDate.value : null,
+    newTaskCategory.value,
+  );
 
-  if (newTaskDate.value) {
-    const dateObj = new Date(newTaskDate.value);
-    formattedDate = new Intl.DateTimeFormat("en-US", {
-      day: "numeric",
-      month: "long",
-    }).format(dateObj);
-  }
-
-  tasks.createNewTask(newTaskTitle.value, formattedDate, newTaskCategory.value);
   newTaskTitle.value = "";
   newTaskDate.value = "";
 }
@@ -76,7 +92,11 @@ function createNewTask() {
 <template>
   <div class="taskManager">
     <div class="createTask">
-      <input type="text" placeholder="new task title" v-model="newTaskTitle" />
+      <input
+        type="text"
+        :placeholder="$t('taskManager.addTaskInput')"
+        v-model="newTaskTitle"
+      />
       <div class="date">
         <label for="date"><img src="/calendarIcon.svg" alt="" /></label>
         <input v-model="newTaskDate" type="date" name="" id="date" required />
@@ -94,15 +114,20 @@ function createNewTask() {
         </select>
       </div>
 
-      <button type="submit" @click="createNewTask">add +</button>
+      <button type="submit" @click="createNewTask">
+        {{ $t("taskManager.addTaskButton") }}
+      </button>
     </div>
     <Filter :tasks="filteredTasks" @switchModes="switchModes" />
 
-    <h3 v-if="currentMode == 'all'">All tasks</h3>
-    <h3 v-if="currentMode == 'today'">Today tasks</h3>
-    <h3 v-if="currentMode == 'done'">Done tasks</h3>
-    <h3 v-if="currentMode == 'active'">Active tasks</h3>
-    <!-- <h3 v-if="currentMode == 'active'">Active tasks</h3> -->
+    <h3 v-if="currentMode == 'all'">{{ $t("taskManager.titleAllTasks") }}</h3>
+    <h3 v-if="currentMode == 'today'">
+      {{ $t("taskManager.titleTodayTasks") }}
+    </h3>
+    <h3 v-if="currentMode == 'done'">{{ $t("taskManager.titleDoneTasks") }}</h3>
+    <h3 v-if="currentMode == 'active'">
+      {{ $t("taskManager.titleActiveTasks") }}
+    </h3>
 
     <div v-if="filteredTasks.length > 0" class="grid">
       <TaskCard
@@ -110,7 +135,7 @@ function createNewTask() {
         :id="task.id"
         :title="task.title"
         :category="task.category"
-        :date="task.date"
+        :date="formatTaskDate(task.date)"
         :catColor="task.catCol"
         :isDone="task.isDone"
         v-for="task in filteredTasks.filter(
@@ -119,7 +144,7 @@ function createNewTask() {
       />
     </div>
 
-    <p class="message" v-else>No tasks found</p>
+    <p class="message" v-else>{{ $t("taskManager.noTasksMessage") }}</p>
   </div>
 </template>
 
@@ -159,7 +184,7 @@ function createNewTask() {
   background-color: var(--accent-color);
   padding: 10px 20px;
   border-radius: 50px;
-  width: 10%;
+  width: 15%;
   font-size: 1rem;
   color: white;
   border: none;

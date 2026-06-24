@@ -46,7 +46,7 @@ const sideBarIsVisible = ref(true);
 .manageSideBar {
   position: absolute;
   top: 5px;
-  left: 22vw;
+  left: 19vw;
   width: 20px;
   height: 20px;
   cursor: pointer;

@@ -1,14 +1,21 @@
 <script setup lang="js">
-import { useTasksSStore, useUsersStore } from "../stores/store";
-
+import { useLangStore, useTasksSStore, useUsersStore } from "../stores/store";
+import { lang } from "../lang.js";
 const usersStore = useUsersStore();
 const tasks = useTasksSStore();
 import { computed } from "vue";
 import TasksManager from "./TasksManager.vue";
+import { useI18n } from "vue-i18n";
 
-const formattedDate = computed(() => {
+const langStore = useLangStore();
+
+const {t} = useI18n()
+const {locale} = useI18n()
+
+const date = computed(() => {
+ const currentLocale = locale.value === "en" ? "en-US" : "ru-RU";
   const today = new Date();
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat(currentLocale, {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -33,15 +40,17 @@ function deleteAllDone() {
         <div class="block">
           <h1>TodoApp</h1>
           <p class="current-user-greeting">
-            Hello {{ usersStore.currentUser?.username }}!
+            {{ $t('taskManager.greeting') }}
+            {{ usersStore.currentUser?.username }}!
           </p>
         </div>
       </div>
-      <div class="date">{{ formattedDate }}</div>
+      <div class="date">{{ date }}</div>
     </div>
     <TasksManager />
     <button @click="deleteAllDone" class="deleteAll">
-      delete done tasks <img src="/deleteIcon.svg" alt="" />
+      {{ $t('taskManager.deleteAllDoneTasksButton') }}
+      <img src="/deleteIcon.svg" alt="" />
     </button>
   </div>
 </template>

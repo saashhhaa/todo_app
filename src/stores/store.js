@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+import { i18n } from "../lang";
+import { lang } from "../lang";
 
 export const useUsersStore = defineStore("users", {
   state: () => ({
@@ -89,26 +91,33 @@ export const useCategoriesStore = defineStore("categories", {
       );
       localStorage.setItem("categories", JSON.stringify(this.customCategories));
     },
+    nya() {
+      const langStore = useLangStore();
+      const currLang = langStore.lang;
+      return currLang;
+    },
   },
 });
 
 export const useTasksSStore = defineStore("tasks", {
   state: () => ({
     tasks: JSON.parse(localStorage.getItem("tasks")) || [],
-    selectedCategory: null
+    selectedCategory: null,
   }),
   actions: {
     createNewTask(newTitle, newDate, newCategory) {
       const categories = useCategoriesStore();
       const users = useUsersStore();
-      const found = categories.customCategories.find((c) => c.title == newCategory)|| categories.categories.find((c) => c.title == newCategory);
+      const found =
+        categories.customCategories.find((c) => c.title == newCategory) ||
+        categories.categories.find((c) => c.title == newCategory);
       const newTask = {
         id: Date.now(),
         userId: users.currentUser.id || null,
         title: newTitle,
-        date: newDate || 'No date',
+        date: newDate || "No date",
         category: newCategory,
-        catCol: found ? found.color: '#fffff',
+        catCol: found ? found.color : "#fffff",
         isDone: false,
       };
       this.tasks.push(newTask);
@@ -123,15 +132,50 @@ export const useTasksSStore = defineStore("tasks", {
       taskToChange.isDone = !taskToChange.isDone;
       localStorage.setItem("tasks", JSON.stringify(this.tasks));
     },
-    selectCategory(categoryTitle){
-      if(this.selectedCategory==categoryTitle){
+    selectCategory(categoryTitle) {
+      if (this.selectedCategory == categoryTitle) {
         this.selectedCategory = null;
-      }else{
-        this.selectedCategory = categoryTitle
+      } else {
+        this.selectedCategory = categoryTitle;
       }
     },
-    clearCategory(){
-      this.selectedCategory=null
-    }
+    clearCategory() {
+      this.selectedCategory = null;
+    },
+  },
+});
+
+export const useLangStore = defineStore("language", {
+  state: () => ({
+    lang: localStorage.getItem("lang") || "en",
+  }),
+  actions: {
+    switchLang() {
+      this.lang = this.lang === "en" ? "ru" : "en";
+      localStorage.setItem("lang", this.lang);
+      i18n.global.locale.value = this.lang;
+    },
+    initLang() {
+      i18n.global.locale.value = this.lang;
+    },
+  },
+});
+
+export const useThemeStore = defineStore("theme", {
+  state: () => ({
+    theme: localStorage.getItem("theme") || "dark",
+  }),
+  actions: {
+    switchTheme(mode) {
+      localStorage.setItem("theme", mode);
+    },
+    applyTheme() {
+      const body = document.body;
+      if (this.theme === "light") {
+        body.classList.add("light-theme");
+      } else {
+        body.classList.remove("light-theme");
+      }
+    },
   },
 });

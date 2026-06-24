@@ -1,11 +1,15 @@
 <script setup>
 import { ref, watch } from "vue";
-import { useUsersStore } from "../stores/store";
+import { useThemeStore, useUsersStore } from "../stores/store";
+import { useI18n } from "vue-i18n";
 
+const themeStore = useThemeStore();
 const usersStore = useUsersStore();
 const newUsernameInput = ref("");
 const previewImage = ref("");
 const editMode = ref(false);
+
+const { t } = useI18n();
 
 watch(editMode, (newValue) => {
   if (newValue) {
@@ -34,6 +38,11 @@ function editUser() {
 function logOut() {
   usersStore.logout();
 }
+
+function handleSwitch(mode) {
+  themeStore.switchTheme(mode);
+  window.location.reload();
+}
 </script>
 
 <template>
@@ -45,11 +54,11 @@ function logOut() {
         src="/arrowIcon.svg"
         alt=""
       />
-      <h1>Settings</h1>
+      <h1>{{ $t("settings.title") }}</h1>
     </div>
 
     <div class="account">
-      <h3>Account</h3>
+      <h3>{{ $t("settings.titleAccount") }}</h3>
       <div class="cover">
         <div class="profileImage" v-if="!editMode">
           <img
@@ -62,7 +71,7 @@ function logOut() {
 
         <label v-else class="profileImageUpload">
           <img :src="previewImage" alt="Preview" />
-          <div class="uploadOverlay">edit</div>
+          <div class="uploadOverlay">{{ $t("settings.editButton") }}</div>
           <input
             type="file"
             @change="handleFileChange"
@@ -78,7 +87,7 @@ function logOut() {
           <div class="email">{{ usersStore.currentUser?.email }}</div>
         </div>
         <button v-if="!editMode" @click="editMode = true" class="editButton">
-          edit<img src="/penIcon.svg" alt="" />
+          {{ $t("settings.editButton") }}<img src="/penIcon.svg" alt="" />
         </button>
         <div v-else class="cover2">
           <button @click="editUser" class="editButton save">∨</button>
@@ -87,15 +96,21 @@ function logOut() {
       </div>
     </div>
     <div class="todoSettings">
-      <h3>Todo settings</h3>
-      <p>Theme</p>
+      <h3>{{ $t("settings.titleTodoSet") }}</h3>
+      <p>{{ $t("settings.titleTheme") }}</p>
       <div class="coverTheme">
-        <button class="light theme">Light</button>
-        <button class="dark theme">Dark</button>
+        <button @click="handleSwitch('light')" class="light theme">
+          {{ $t("settings.themeLight") }}
+        </button>
+        <button @click="handleSwitch('dark')" class="dark theme">
+          {{ $t("settings.themeDark") }}
+        </button>
       </div>
     </div>
     <RouterLink to="/">
-      <button @click="logOut" class="logOut error">log out</button>
+      <button @click="logOut" class="logOut error">
+        {{ $t("settings.logOutButton") }}
+      </button>
     </RouterLink>
   </div>
 </template>
@@ -113,7 +128,7 @@ button {
 .coverTheme {
   display: flex;
   gap: 10px;
-  margin:20px 0 10vh 0;
+  margin: 20px 0 10vh 0;
 }
 
 .light {
@@ -127,7 +142,7 @@ button {
   border: 2px rgba(255, 255, 255, 0.36) solid !important;
 }
 
-.theme:hover{
+.theme:hover {
   filter: brightness(0.5);
 }
 

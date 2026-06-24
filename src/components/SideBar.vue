@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import Category from "./Category.vue";
 import {
   useCategoriesStore,
@@ -7,7 +7,10 @@ import {
   useUsersStore,
 } from "../stores/store.js";
 import Settings from "../pages/Settings.vue";
+import LangSwitch from "./LangSwitch.vue";
+import { useI18n } from "vue-i18n";
 
+const {t} = useI18n()
 const categoriesStore = useCategoriesStore();
 const users = useUsersStore();
 const categotyTitle = ref("");
@@ -34,6 +37,7 @@ function addCategory() {
   categoryColor.value = "#1a9185";
   newCategoryFormVisible.value = false;
 }
+
 </script>
 
 <template>
@@ -41,10 +45,10 @@ function addCategory() {
     <div class="top">
       <div class="search">
         <img src="/searchIcon.svg" alt="" />
-        <input type="text" placeholder="search task by name" />
+        <input type="text" :placeholder="$t('sideBar.searchInput')" />
       </div>
       <div class="categories">
-        <h2>Categories</h2>
+        <h2>{{$t('sideBar.categTitle')}}</h2>
         <div class="categories_list">
           <Category
             v-for="category in categoriesStore.categories"
@@ -78,14 +82,14 @@ function addCategory() {
           @click="newCategoryFormVisible = true"
           class="add-category-button"
         >
-          add category <span>+</span>
+          {{$t('sideBar.addCategButton')}}
         </button>
         <div v-if="newCategoryFormVisible" class="addCategory_input">
           <input
             type="text"
             id="categoryTitle"
             v-model="categotyTitle"
-            placeholder="Category title"
+            :placeholder="$t('sideBar.categoryName')"
             class="categoryInput"
           />
           <input type="color" id="categoryColor" v-model="categoryColor" />
@@ -100,13 +104,10 @@ function addCategory() {
 
     <div class="sideBarButtons">
       <button @click="isSettings = true" class="linkToPage">
-        <div>settings</div>
+        <div>{{$t('sideBar.settings')}}</div>
         <img src="/settingsIcon.svg" alt="" />
       </button>
-        <button @click="" class="linkToPage">
-          <div>eng</div>
-          <img src="/languageIcon.svg" alt="" />
-        </button>
+        <LangSwitch/>
     </div>
   </div>
 

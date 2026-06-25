@@ -10,6 +10,12 @@ const newUsernameInput = ref("");
 const previewImage = ref("");
 const editMode = ref<boolean>(false);
 
+const isOpen =ref<boolean>(false)
+
+function closeSettings () : void {
+  isOpen.value = false
+}
+
 const { t } = useI18n();
 
 watch(editMode, (newValue) => {

@@ -37,6 +37,14 @@ function addCategory() :void {
   newCategoryFormVisible.value = false;
 }
 
+function handleBackdropClick(event: MouseEvent) {
+  const clickedInsideSettings = (event.target as HTMLElement).closest('.settings-window');
+  
+  if (!clickedInsideSettings) {
+    isSettings.value = false;
+  }
+}
+
 </script>
 
 <template>
@@ -99,16 +107,16 @@ function addCategory() :void {
 
     <div class="sideBarButtons">
       <button @click="isSettings = true" class="linkToPage">
-        <div>{{$t('sideBar.settings')}}</div>
+        <div >{{$t('sideBar.settings')}}</div>
         <img src="/settingsIcon.svg" alt="" />
       </button>
         <LangSwitch/>
     </div>
   </div>
 
-  <div v-if="isSettings" class="modal">
-    <Settings @close="isSettings = false" />
-  </div>
+  <div v-if="isSettings" class="modal" @click="handleBackdropClick">
+  <Settings class="settings-window" @close="isSettings = false" />
+</div>
 </template>
 
 <style scoped>

@@ -70,30 +70,49 @@ body.light-theme .filterMode {
   border: 1px solid rgba(0, 0, 0, 0.326);
 }
 
-.body.light-theme .linkToPage{
-  filter: brightness(1.5) !important;
-  background-color: #e18f23 !important;
+body.light-theme .linkToPage{
+  filter: brightness(1) !important;
+  color: rgba(0, 0, 0, 0.558);
 }
 
-.body.light-theme input::placeholder{
+body.light-theme input::placeholder{
   color: black !important;
 }
 
-.body.light-theme input, select{
+body.light-theme input, select{
   color: rgba(0, 0, 0, 0.555) !important;
 }
 
-.activeDone {
+body.light-theme .activeDone {
   border: 1px solid rgb(98, 219, 98);
   color: rgb(98, 219, 98);
 }
 
-.activeActive {
+body.light-theme .activeActive {
   border: 1px solid rgb(228, 192, 12);
   color: rgb(228, 192, 12);
 }
 
-.activeAll {
+body.light-theme .activeAll {
   border: 1px solid rgb(67, 146, 237);
   color: rgb(102, 167, 241);
+}
+
+body.light-theme .activeToday {
+  border: 1px solid rgb(67, 146, 237);
+  color: rgb(102, 167, 241);
+}
+
+body.light-theme .settings h3, body.light-theme .settings h1{
+color: rgba(0, 0, 0, 0.703);
+}
+
+body.light-theme .save{
+  color: rgb(118, 229, 118);
+}
+
+body.light-theme .taskCard.done{
+  /* filter: brightness(0.9); */
+  background-color: rgba(198, 217, 210, 0.725) !important;
+  color: rgb(171, 249, 218);
 }

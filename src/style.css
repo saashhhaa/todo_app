@@ -80,7 +80,7 @@ body.light-theme input::placeholder{
 }
 
 body.light-theme input, select{
-  color: rgba(0, 0, 0, 0.555) !important;
+  color: rgba(0, 0, 0, 0.278) !important
 }
 
 body.light-theme .activeDone {

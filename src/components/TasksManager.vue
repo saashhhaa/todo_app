@@ -212,7 +212,7 @@ function createNewTask() {
   border: none;
   outline: none;
   font-size: 1rem;
-  color: white;
+  color: white ;
   filter: brightness(0.9);
 }
 

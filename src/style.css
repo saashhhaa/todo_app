@@ -2,10 +2,10 @@
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  transition: .2s all;
+  transition: 0.2s all;
 }
 
-body{
+body {
   background-color: var(--blackTheme-back-secondary2);
   /* background-image: linear-gradient(to top, rgba(0, 0, 0, 0.603), transparent), url("/background.png") !important; */
 
@@ -25,14 +25,12 @@ span {
   color: var(--accent-color);
 }
 
-
-
-:root{
---blackTheme-font: white;
---blackTheme-back:rgb(40 42 61); 
---blackTheme-back-secondary: rgb(67 69 92);
---blackTheme-back-secondary2: rgb(46 48 71);
---accent-color: #e18f23;
+:root {
+  --blackTheme-font: white;
+  --blackTheme-back: rgb(40 42 61);
+  --blackTheme-back-secondary: rgb(67 69 92);
+  --blackTheme-back-secondary2: rgb(46 48 71);
+  --accent-color: #e18f23;
 }
 
 .error {
@@ -41,21 +39,20 @@ span {
   text-align: center;
 }
 body.light-theme {
-  --blackTheme-font: rgb(40, 42, 61);             
+  --blackTheme-font: rgb(40, 42, 61);
   --blackTheme-back: rgba(240, 242, 245, 0.573);
   --blackTheme-back-secondary: rgba(255, 255, 255, 0.389);
   --blackTheme-back-secondary2: rgb(220, 222, 235);
-  --accent-color: #d67f13; 
+  --accent-color: #d67f13;
 }
 
-body.light-theme img{
+body.light-theme img {
   filter: brightness(0.6);
 }
 
-body.light-theme img:hover{
+body.light-theme img:hover {
   filter: brightness(0.7) !important;
 }
-
 
 body.light-theme .profileImage {
   filter: brightness(1);
@@ -70,17 +67,18 @@ body.light-theme .filterMode {
   border: 1px solid rgba(0, 0, 0, 0.326);
 }
 
-body.light-theme .linkToPage{
+body.light-theme .linkToPage {
   filter: brightness(1) !important;
   color: rgba(0, 0, 0, 0.558);
 }
 
-body.light-theme input::placeholder{
+body.light-theme input::placeholder {
   color: black !important;
 }
 
-body.light-theme input, select{
-  color: rgba(0, 0, 0, 0.278) !important
+body.light-theme input,
+select {
+  color: rgba(0, 0, 0, 0.278) !important;
 }
 
 body.light-theme .activeDone {
@@ -103,16 +101,21 @@ body.light-theme .activeToday {
   color: rgb(102, 167, 241);
 }
 
-body.light-theme .settings h3, body.light-theme .settings h1{
-color: rgba(0, 0, 0, 0.703);
+body.light-theme .settings h3,
+body.light-theme .settings h1 {
+  color: rgba(0, 0, 0, 0.703);
 }
 
-body.light-theme .save{
+body.light-theme .save {
   color: rgb(118, 229, 118);
 }
 
-body.light-theme .taskCard.done{
+body.light-theme .taskCard.done {
   /* filter: brightness(0.9); */
   background-color: rgba(198, 217, 210, 0.725) !important;
   color: rgb(171, 249, 218);
+}
+
+body.light-theme .weather-widget {
+  color: rgb(0, 0, 0);
 }

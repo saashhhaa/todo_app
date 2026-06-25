@@ -1,5 +1,6 @@
-1. закрывать настройки по нажатию в пустоту
 
 3. добавить погоду
 
 5/ 
+
+https://weathermachine.io/forecast/enSQDRFtuQSUb5uVKXEwwryxRhKmSwPk/41.87,-87.62?source=mock

@@ -59,6 +59,19 @@ export const lang = {
       logOutButton: "выйти",
       editButton: "изменить",
     },
+    wheather:{
+      code1: 'Ясно',
+      code2:'Переменная облачность',
+      code3:'Туман',
+      code4:'Дождь',
+      code5: 'Снег',
+      code6: 'Ливень',
+      code7: 'Облачно',
+      loading: 'Загрузка погоды...',
+      title1: 'Бишкек',
+      title2: 'температура: ',
+      title3: 'на улице: '
+    }
   },
   en: {
     login: {
@@ -118,6 +131,19 @@ export const lang = {
       logOutButton: "log out",
       editButton: "edit",
     },
+    wheather:{
+      code1: 'Clear',
+      code2:'Partly cloudy',
+      code3:'Foggy',
+      code4:'Rainy',
+      code5: 'Snowy',
+      code6: 'Heavy rain',
+      code7: 'Cloudy',
+      loading: 'Wheather loading...',
+      title1: 'Bishkek',
+      title2: 'temperature: ',
+      title3: 'outside: '
+    }
   },
 };
 

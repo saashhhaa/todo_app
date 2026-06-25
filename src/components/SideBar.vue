@@ -9,6 +9,7 @@ import {
 import Settings from "../pages/Settings.vue";
 import LangSwitch from "./LangSwitch.vue";
 import { useI18n } from "vue-i18n";
+import Wheather from "./Wheather.vue";
 
 const {t} = useI18n()
 const categoriesStore = useCategoriesStore();
@@ -104,7 +105,7 @@ function handleBackdropClick(event: MouseEvent) {
         </div>
       </div>
     </div>
-
+    <Wheather/>
     <div class="sideBarButtons">
       <button @click="isSettings = true" class="linkToPage">
         <div >{{$t('sideBar.settings')}}</div>

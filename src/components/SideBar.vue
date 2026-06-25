@@ -1,5 +1,5 @@
-<script setup>
-import { ref, computed } from "vue";
+<script setup lang="ts">
+import { ref} from "vue";
 import Category from "./Category.vue";
 import {
   useCategoriesStore,
@@ -17,16 +17,15 @@ const categotyTitle = ref("");
 const categoryColor = ref("#1a9185");
 const tasksStore = useTasksSStore();
 const newCategoryFormVisible = ref(false);
-const cantAddMore = ref(false);
 const isSettings = ref(false);
 
-function getTaskCount(categoryTitle) {
+function getTaskCount(categoryTitle:string) : number {
   return tasksStore.tasks.filter(
     (task) => task.userId === users.currentUser?.id && task.category === categoryTitle
   ).length;
 }
 
-function addCategory() {
+function addCategory() :void {
   if (categotyTitle.value.trim() == "") {
     newCategoryFormVisible.value = false;
     return;
@@ -62,7 +61,7 @@ function addCategory() {
           <Category
             v-if="categoriesStore.customCategories.length"
             v-for="category in categoriesStore.customCategories.filter(
-              (cat) => cat.userId == users.currentUser.id,
+              (cat) => cat.userId == users.currentUser?.id,
             )"
             @click="tasksStore.selectCategory(category.title)"
             :key="category.id"
@@ -96,10 +95,6 @@ function addCategory() {
           <button @click="addCategory">+</button>
         </div>
       </div>
-      <!-- <div class="calendar">
-        <h2>Calendar</h2>
-        <div>тута буде календар</div>
-      </div> -->
     </div>
 
     <div class="sideBarButtons">

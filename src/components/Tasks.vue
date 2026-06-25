@@ -1,13 +1,11 @@
 <script setup lang="js">
-import { useLangStore, useTasksSStore, useUsersStore } from "../stores/store";
-import { lang } from "../lang.js";
+import {useTasksSStore, useUsersStore } from "../stores/store";
 const usersStore = useUsersStore();
 const tasks = useTasksSStore();
 import { computed } from "vue";
 import TasksManager from "./TasksManager.vue";
 import { useI18n } from "vue-i18n";
-
-const langStore = useLangStore();
+import defaulProfileImage from '../assets/profileImageTest.jpg'
 
 const {t} = useI18n()
 const {locale} = useI18n()
@@ -32,9 +30,8 @@ function deleteAllDone() {
   <div class="main">
     <div class="cover">
       <div class="greeting">
-        <!-- <div class="profileImage"></div> -->
         <img
-          :src="usersStore.currentUser?.image || '/public/profileImageTest.jpg'"
+          :src="usersStore.currentUser?.image || defaulProfileImage"
           class="profileImage"
         />
         <div class="block">

@@ -1,47 +1,46 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from "vue";
-import { useThemeStore, useUsersStore } from "../stores/store";
+import { useThemeStore, useUsersStore } from "../stores/store.ts";
 import { useI18n } from "vue-i18n";
+import defaulProfileImage from "../assets/profileImageTest.jpg";
 
 const themeStore = useThemeStore();
 const usersStore = useUsersStore();
 const newUsernameInput = ref("");
 const previewImage = ref("");
-const editMode = ref(false);
+const editMode = ref<boolean>(false);
 
 const { t } = useI18n();
 
 watch(editMode, (newValue) => {
   if (newValue) {
     newUsernameInput.value = usersStore.currentUser?.username || "";
-    previewImage.value =
-      usersStore.currentUser?.image || "/public/profileImageTest.jpg";
+    previewImage.value = usersStore.currentUser?.image || defaulProfileImage;
   }
 });
 
-function handleFileChange(event) {
+function handleFileChange(event: any): void {
   const file = event.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
   reader.onload = (e) => {
-    previewImage.value = e.target.result;
+    previewImage.value = e.target?.result as string;
   };
   reader.readAsDataURL(file);
 }
 const emit = defineEmits(["close"]);
 
-function editUser() {
+function editUser(): void {
   usersStore.editUser(previewImage.value, newUsernameInput.value);
   editMode.value = false;
 }
-function logOut() {
+function logOut(): void {
   usersStore.logout();
 }
 
-function handleSwitch(mode) {
+function handleSwitch(mode: "light" | "dark"): void {
   themeStore.switchTheme(mode);
-  window.location.reload();
 }
 </script>
 
@@ -62,9 +61,7 @@ function handleSwitch(mode) {
       <div class="cover">
         <div class="profileImage" v-if="!editMode">
           <img
-            :src="
-              usersStore.currentUser?.image || '/public/profileImageTest.jpg'
-            "
+            :src="usersStore.currentUser?.image || defaulProfileImage"
             alt="Avatar"
           />
         </div>

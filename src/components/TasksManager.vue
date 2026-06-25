@@ -17,11 +17,11 @@ const { t } = useI18n();
 const todayDate = computed(() => {
   const today = new Date();
   const yyyy = today.getFullYear();
-  
-  const mm = String(today.getMonth() + 1).padStart(2, '0'); 
-  const dd = String(today.getDate()).padStart(2, '0');
-  
-  return `${yyyy}-${mm}-${dd}`; 
+
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+
+  return `${yyyy}-${mm}-${dd}`;
 });
 
 const users = useUsersStore();
@@ -29,7 +29,7 @@ const categories = useCategoriesStore();
 const tasks = useTasksSStore();
 
 const currentMode = ref("all");
-function switchModes(mode) {
+function switchModes(mode: string) {
   currentMode.value = mode;
   if (mode == "all") {
     tasks.clearCategory();
@@ -37,38 +37,42 @@ function switchModes(mode) {
 }
 const filteredTasks = computed(() => {
   let result = tasks.tasks.filter(
-    (task) => task.userId === users.currentUser.id,
+    (task: { userId: number }) => task.userId === users.currentUser?.id,
   );
 
   if (tasks.selectedCategory) {
-    result = result.filter((task) => task.category === tasks.selectedCategory);
+    result = result.filter(
+      (task: { category: string }) => task.category === tasks.selectedCategory,
+    );
   }
   if (currentMode.value === "active") {
-    return result.filter((task) => !task.isDone);
+    return result.filter((task: { isDone: boolean }) => !task.isDone);
   } else if (currentMode.value === "done") {
-    return result.filter((task) => task.isDone);
+    return result.filter((task: { isDone: boolean }) => task.isDone);
   } else if (currentMode.value === "today") {
-    return result.filter((task) => task.date === todayDate.value);
+    return result.filter(
+      (task: { date: string }) => task.date === todayDate.value,
+    );
   }
   return result;
 });
 
 const availableCategories = computed(() => {
-  const currentUserId = users.currentUser.id;
+  const currentUserId = users.currentUser?.id;
   const currCustomCategories = categories.customCategories.filter(
-    (category) => category.userId == currentUserId,
+    (category: { userId: number }) => category.userId == currentUserId,
   );
   return [...categories.categories, ...currCustomCategories];
 });
 
-const {locale} = useI18n()
+const { locale } = useI18n();
 
-function formatTaskDate(rawDate) {
+function formatTaskDate(rawDate: string) {
   if (!rawDate) return "";
 
   const dateObj = new Date(rawDate);
   const currentLocale = locale.value === "en" ? "en-US" : "ru-RU";
-if (isNaN(dateObj.getTime())) return null;
+  if (isNaN(dateObj.getTime())) return null;
   return new Intl.DateTimeFormat(currentLocale, {
     day: "numeric",
     month: "long",
@@ -80,12 +84,12 @@ function createNewTask() {
 
   tasks.createNewTask(
     newTaskTitle.value,
-    newTaskDate.value ? newTaskDate.value : null,
+    newTaskDate.value ? newTaskDate.value : "",
     newTaskCategory.value,
   );
 
   newTaskTitle.value = "";
-  newTaskDate.value = "";
+  newTaskDate.value = null;
 }
 </script>
 
@@ -135,11 +139,11 @@ function createNewTask() {
         :id="task.id"
         :title="task.title"
         :category="task.category"
-        :date="formatTaskDate(task.date)"
+        :date="formatTaskDate(task.date) ?? undefined"
         :catColor="task.catCol"
         :isDone="task.isDone"
         v-for="task in filteredTasks.filter(
-          (task) => task.userId == users.currentUser.id,
+          (task: { userId: number }) => task.userId == users.currentUser?.id,
         )"
       />
     </div>
@@ -212,7 +216,7 @@ function createNewTask() {
   border: none;
   outline: none;
   font-size: 1rem;
-  color: white ;
+  color: white;
   filter: brightness(0.9);
 }
 

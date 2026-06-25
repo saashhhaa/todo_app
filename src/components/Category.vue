@@ -1,35 +1,24 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { useCategoriesStore } from "../stores/store";
 
-const props = defineProps({
-  id: {
-    type: Number,
-    required: false,
-  },
-  title: {
-    type: String,
-    required: false,
-  },
-  color: {
-    type: String,
-    required: false,
-  },
-  count: {
-    type: Number,
-    required: false,
-  },
-  isCustom: {
-    type: Boolean,
-    required: false,
-  },
-});
+interface Props {
+  id?: number;
+  title: string;
+  color: string;
+  count: number;
+  isCustom?: boolean;
+}
+
+const props = defineProps<Props>();
 
 const categories = useCategoriesStore();
-const isClicked = ref(false)
-function deleteCategory() {
-  categories.deleteCategory(props.id);
-  isClicked.value = true
+const isClicked = ref(false);
+function deleteCategory(): void {
+  if (props.id) {
+    categories.deleteCategory(props.id);
+    isClicked.value = true;
+  }
 }
 </script>
 
@@ -57,7 +46,7 @@ function deleteCategory() {
   border-radius: 10px;
   padding: 15px 20px;
   background-color: var(--blackTheme-back-secondary);
-    border: 1px solid transparent;
+  border: 1px solid transparent;
 }
 
 .delete {
@@ -65,8 +54,8 @@ function deleteCategory() {
 }
 
 .active {
-    background-color: rgba(215, 229, 250, 0.316) !important;
-    border: 1px solid rgba(255, 255, 255, 0.477);
+  background-color: rgba(215, 229, 250, 0.316) !important;
+  border: 1px solid rgba(255, 255, 255, 0.477);
 }
 
 .box,

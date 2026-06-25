@@ -1,5 +1,4 @@
-<script setup>
-import { ref } from "vue";
+<script setup >
 import { useLangStore } from "../stores/store";
 const langStore = useLangStore();
 

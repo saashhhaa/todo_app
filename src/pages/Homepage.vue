@@ -1,12 +1,10 @@
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import SideBar from "../components/SideBar.vue";
 import Tasks from "../components/Tasks.vue";
-import { useCategoriesStore } from "../stores/store.js";
+import closeSideBarIcon from '../assets/closeSideBarIcon.svg'
+import openSideBarIcon from '../assets/openSideBarIcon.svg'
 
-
-const router = useRouter();
 
 const sideBarIsVisible = ref(true);
 </script>
@@ -14,12 +12,11 @@ const sideBarIsVisible = ref(true);
 <template>
   <div class="homepage">
     <SideBar v-if="sideBarIsVisible" />
-
     <Tasks />
   </div>
   <img
     :class="sideBarIsVisible ? 'manageSideBar' : 'manageSideBar hidden'"
-    :src="sideBarIsVisible ? '/closeSideBarIcon.svg' : '/openSideBarIcon.svg'"
+    :src="sideBarIsVisible ? closeSideBarIcon : openSideBarIcon"
     alt=""
     @click="sideBarIsVisible = !sideBarIsVisible"
   />
@@ -30,7 +27,6 @@ const sideBarIsVisible = ref(true);
 .homepage {
   display: flex;
   flex-direction: row;
-  /* justify-content: space-between; */
   align-items: flex-start;
   position: relative;
   width: 100vw;

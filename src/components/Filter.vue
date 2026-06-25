@@ -1,18 +1,17 @@
-<script setup>
-import { defineEmits, ref } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 const emit = defineEmits(["switchModes"]);
-const {t} = useI18n()
+const { t } = useI18n();
 const props = defineProps({
   tasks: Array,
 });
 const currMode = ref("all");
 
-function changeMode(mode) {
+function changeMode(mode: "today" | "all" | "active" | "done") {
   currMode.value = mode;
   emit("switchModes", mode);
 }
-
 </script>
 
 <template>
@@ -22,29 +21,31 @@ function changeMode(mode) {
         @click="changeMode('today')"
         :class="currMode == 'today' ? 'filterMode activeToday' : 'filterMode'"
       >
-        {{$t('taskManager.filterToday') }}
+        {{ $t("taskManager.filterToday") }}
       </button>
       <img src="/filterIcon.svg" alt="" />
       <button
         @click="changeMode('all')"
         :class="currMode == 'all' ? 'filterMode activeAll' : 'filterMode'"
       >
-        {{ $t('taskManager.filterAll') }}
+        {{ $t("taskManager.filterAll") }}
       </button>
       <button
         @click="changeMode('active')"
         :class="currMode == 'active' ? 'filterMode activeActive' : 'filterMode'"
       >
-        {{ $t('taskManager.filterActive')}}
+        {{ $t("taskManager.filterActive") }}
       </button>
       <button
         @click="changeMode('done')"
         :class="currMode == 'done' ? 'filterMode  activeDone' : 'filterMode'"
       >
-        {{ $t('taskManager.filterDone') }}
+        {{ $t("taskManager.filterDone") }}
       </button>
     </div>
-    <p class="tasksAmount">{{ tasks.length }} {{ $t('taskManager.tasks') }}</p>
+    <p class="tasksAmount">
+      {{ props.tasks?.length }} {{ $t("taskManager.tasks") }}
+    </p>
   </div>
 </template>
 

@@ -1,8 +1,10 @@
-<script setup>
-import { ref, computed } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUsersStore } from "../stores/store";
 import LangSwitch from "../components/LangSwitch.vue";
+import hidePassword from "../assets/hidePassword.svg";
+import showPassword from "../assets/showPassword.svg";
 import { useI18n } from "vue-i18n";
 const passwordInput = ref("");
 const passwordCheckInput = ref("");
@@ -16,7 +18,7 @@ const message = ref("");
 
 const { t } = useI18n();
 
-const usersStore = useUsersStore()
+const usersStore = useUsersStore();
 
 function createUsers() {
   const username = usernameInput.value.trim();
@@ -98,13 +100,13 @@ function validate() {
           />
 
           <img
-            :src="passwordIsVisible ? '/hidePassword.svg' : '/showPassword.svg'"
+            :src="passwordIsVisible ? hidePassword : showPassword"
             @click="passwordIsVisible = !passwordIsVisible"
             alt="Toggle Password"
             class="toggle-password-btn"
           />
         </div>
-        <p v-if="message" class="error">{{ $t(`login.${message}`) || '' }}</p>
+        <p v-if="message" class="error">{{ $t(`login.${message}`) || "" }}</p>
         <button type="submit">{{ $t("login.submitButton") }}</button>
         <p class="switch-login-link">
           {{ $t("login.hintRegist") }}
@@ -142,7 +144,7 @@ function validate() {
             id="password"
           />
           <img
-            :src="passwordIsVisible ? '/hidePassword.svg' : '/showPassword.svg'"
+            :src="passwordIsVisible ? hidePassword : showPassword"
             @click="passwordIsVisible = !passwordIsVisible"
             alt="Toggle Password"
             class="toggle-password-btn"

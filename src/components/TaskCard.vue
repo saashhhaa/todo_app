@@ -1,14 +1,18 @@
-<script setup>
+<script setup lang="ts">
 import { useCategoriesStore, useTasksSStore } from "../stores/store";
+import doneIcon from '../assets/doneIcon.svg'
+import activeIcon from '../assets/circleIcon.svg'
 
-const props = defineProps({
-  id: { type: Number },
-  title: { type: String },
-  category: { type: String },
-  catColor: { type: String },
-  date: { type: String, required: false },
-  isDone: { type: Boolean },
-});
+interface Task {
+  id: number;
+  title: string;
+  category: string;
+  catColor: string;
+  date: string;
+  isDone: boolean;
+}
+
+const props = defineProps<Task>();
 
 const tasks = useTasksSStore();
 const categories = useCategoriesStore();
@@ -18,10 +22,10 @@ function deleteTask() {
   const catAmount = categories.categories.find(
     (cat) => cat.title == props.category,
   );
-  catAmount.count -= 1;
+  if (catAmount) {
+    catAmount.count -= 1;
+  }
 }
-
-
 </script>
 
 <template>
@@ -30,7 +34,7 @@ function deleteTask() {
       <img
         @click="tasks.switchTaskState(props.id)"
         class="doneButton"
-        :src="props.isDone ? '/doneIcon.svg' : '/circleIcon.svg'"
+        :src="props.isDone ? doneIcon : activeIcon"
         alt=""
       />
       <div class="taskInfo">
@@ -43,7 +47,7 @@ function deleteTask() {
             ></div>
             {{ props.category }}
           </div>
-          <div v-if="props.date!=null" class="date">
+          <div v-if="props.date != null" class="date">
             <img src="/calendarIcon.svg" />
             <div class="">{{ props.date }}</div>
           </div>

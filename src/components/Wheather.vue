@@ -1,5 +1,3 @@
-
-
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
@@ -19,7 +17,6 @@ const { result, loading, error } = useQuery(gql`
 
 const temperature = computed(() => result.value?.weather?.temperature ?? null);
 
-// 3. Возвращаем вычисление описания погоды по коду
 const condition = computed(() => {
   const code = result.value?.weather?.weatherCode;
   if (code === undefined || code === null) return "";
@@ -37,9 +34,9 @@ const condition = computed(() => {
 <template>
   <div class="weather-widget">
     <div v-if="loading">{{ $t("wheather.loading") }}</div>
-    
+
     <div v-else-if="error">{{ $t("wheather.error") }}</div>
-    
+
     <div v-else>
       <h3>{{ $t("wheather.title1") }}</h3>
       <p>{{ $t("wheather.title2") }} {{ temperature }}°C</p>

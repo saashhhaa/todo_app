@@ -60,7 +60,7 @@ function changeMode(mode: "today" | "all" | "active" | "done") {
   align-items: center;
 }
 
-.cover img {
+.cover .icon {
   width: 30px;
   height: 30px;
   filter: brightness(0.5);

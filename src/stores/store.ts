@@ -217,13 +217,13 @@ export const useLangStore = defineStore("language", {
 
 export const useThemeStore = defineStore("theme", {
   state: () => ({
-    theme: (localStorage.getItem("theme") || "dark") as 'light' | 'dark',
+    theme: (localStorage.getItem("theme") || "dark") as "dark" | "light",
   }),
   actions: {
-    switchTheme(mode: 'light' | 'dark'): void {
-      this.theme = mode
+    switchTheme(mode: "dark" | "light"): void {
+      this.theme = mode;
       localStorage.setItem("theme", mode);
-      this.applyTheme()
+      this.applyTheme();
     },
     applyTheme(): void {
       const body = document.body;

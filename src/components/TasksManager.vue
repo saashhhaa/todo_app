@@ -12,17 +12,13 @@ const newTaskTitle = ref("");
 const newTaskDate = ref(null);
 const newTaskCategory = ref("work");
 
-const { t } = useI18n();
+import dayjs from "dayjs";
+import "dayjs/locale/ru";
+import "dayjs/locale/en";
+const todayDate = computed(() => dayjs().format("YYYY-MM-DD"));
 
-const todayDate = computed(() => {
-  const today = new Date();
-  const yyyy = today.getFullYear();
 
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
-
-  return `${yyyy}-${mm}-${dd}`;
-});
+const { t, locale } = useI18n();
 
 const users = useUsersStore();
 const categories = useCategoriesStore();
@@ -65,18 +61,14 @@ const availableCategories = computed(() => {
   return [...categories.categories, ...currCustomCategories];
 });
 
-const { locale } = useI18n();
 
 function formatTaskDate(rawDate: string) {
   if (!rawDate) return "";
+  
+  const dateObj = dayjs(rawDate);
+  if (!dateObj.isValid()) return null;
 
-  const dateObj = new Date(rawDate);
-  const currentLocale = locale.value === "en" ? "en-US" : "ru-RU";
-  if (isNaN(dateObj.getTime())) return null;
-  return new Intl.DateTimeFormat(currentLocale, {
-    day: "numeric",
-    month: "long",
-  }).format(dateObj);
+  return dateObj.locale(locale.value).format("D MMMM");
 }
 
 function createNewTask() {

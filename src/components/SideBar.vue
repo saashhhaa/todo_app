@@ -12,6 +12,7 @@ import { useI18n } from "vue-i18n";
 import Wheather from "./Wheather.vue";
 
 import { onClickOutside } from "@vueuse/core";
+import Calendar from "./Calendar.vue";
 const settingsRef = ref(null);
 onClickOutside(settingsRef, () => {
   isSettings.value = false;
@@ -104,6 +105,7 @@ function addCategory(): void {
         </div>
       </div>
     </div>
+    <Calendar/>
     <Wheather />
     <div class="sideBarButtons">
       <button @click="isSettings = true" class="linkToPage">

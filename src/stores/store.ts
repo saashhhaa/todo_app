@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { i18n } from "../lang.ts";
+import { ref } from "vue";
 
 export interface User {
   id: number;
@@ -235,3 +236,9 @@ export const useThemeStore = defineStore("theme", {
     },
   },
 });
+
+export const useDateStore = defineStore('date', () => {
+  const selectedDate = ref(new Date())
+  return {selectedDate}
+
+})

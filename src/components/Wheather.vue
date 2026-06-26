@@ -2,18 +2,39 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useQuery } from "@vue/apollo-composable";
+import { useDateStore } from "../stores/store.ts";
 import gql from "graphql-tag";
 
 const { t } = useI18n();
+const dateStore = useDateStore(); 
+const formattedDate = computed(() => {
+  const date = dateStore.selectedDate;
+  if (!date) return "";
+  
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}`;
+});
 
-const { result, loading, error } = useQuery(gql`
-  query GetWeather {
-    weather(latitude: 42.87, longitude: 74.59) {
+const WEATHER_QUERY = gql`
+  query GetWeather($latitude: Float!, $longitude: Float!, $date: String!) {
+    weather(latitude: $latitude, longitude: $longitude, date: $date) {
       temperature
       weatherCode
     }
   }
-`);
+`;
+
+const { result, loading, error } = useQuery(
+  WEATHER_QUERY, 
+  () => ({
+    latitude: 42.87,
+    longitude: 74.59,
+    date: formattedDate.value
+  })
+);
 
 const temperature = computed(() => result.value?.weather?.temperature ?? null);
 
@@ -36,6 +57,11 @@ const condition = computed(() => {
     <div v-if="loading">{{ $t("wheather.loading") }}</div>
 
     <div v-else-if="error">{{ $t("wheather.error") }}</div>
+
+    <div v-else-if="result?.weather === null">
+      <h3>{{ $t("wheather.title1") }}</h3>
+      <p>error</p> 
+    </div>
 
     <div v-else>
       <h3>{{ $t("wheather.title1") }}</h3>

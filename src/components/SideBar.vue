@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref} from "vue";
+import { ref } from "vue";
 import Category from "./Category.vue";
 import {
   useCategoriesStore,
@@ -11,7 +11,13 @@ import LangSwitch from "./LangSwitch.vue";
 import { useI18n } from "vue-i18n";
 import Wheather from "./Wheather.vue";
 
-const {t} = useI18n()
+import { onClickOutside } from "@vueuse/core";
+const settingsRef = ref(null);
+onClickOutside(settingsRef, () => {
+  isSettings.value = false;
+});
+
+const { t } = useI18n();
 const categoriesStore = useCategoriesStore();
 const users = useUsersStore();
 const categotyTitle = ref("");
@@ -20,13 +26,14 @@ const tasksStore = useTasksSStore();
 const newCategoryFormVisible = ref(false);
 const isSettings = ref(false);
 
-function getTaskCount(categoryTitle:string) : number {
+function getTaskCount(categoryTitle: string): number {
   return tasksStore.tasks.filter(
-    (task) => task.userId === users.currentUser?.id && task.category === categoryTitle
+    (task) =>
+      task.userId === users.currentUser?.id && task.category === categoryTitle,
   ).length;
 }
 
-function addCategory() :void {
+function addCategory(): void {
   if (categotyTitle.value.trim() == "") {
     newCategoryFormVisible.value = false;
     return;
@@ -36,14 +43,6 @@ function addCategory() :void {
   categotyTitle.value = "";
   categoryColor.value = "#1a9185";
   newCategoryFormVisible.value = false;
-}
-
-function handleBackdropClick(event: MouseEvent) {
-  const clickedInsideSettings = (event.target as HTMLElement).closest('.settings-window');
-  
-  if (!clickedInsideSettings) {
-    isSettings.value = false;
-  }
 }
 
 </script>
@@ -56,7 +55,7 @@ function handleBackdropClick(event: MouseEvent) {
         <input type="text" :placeholder="$t('sideBar.searchInput')" />
       </div>
       <div class="categories">
-        <h2>{{$t('sideBar.categTitle')}}</h2>
+        <h2>{{ $t("sideBar.categTitle") }}</h2>
         <div class="categories_list">
           <Category
             v-for="category in categoriesStore.categories"
@@ -90,7 +89,7 @@ function handleBackdropClick(event: MouseEvent) {
           @click="newCategoryFormVisible = true"
           class="add-category-button"
         >
-          {{$t('sideBar.addCategButton')}}
+          {{ $t("sideBar.addCategButton") }}
         </button>
         <div v-if="newCategoryFormVisible" class="addCategory_input">
           <input
@@ -105,19 +104,23 @@ function handleBackdropClick(event: MouseEvent) {
         </div>
       </div>
     </div>
-    <Wheather/>
+    <Wheather />
     <div class="sideBarButtons">
       <button @click="isSettings = true" class="linkToPage">
-        <div >{{$t('sideBar.settings')}}</div>
+        <div>{{ $t("sideBar.settings") }}</div>
         <img src="/settingsIcon.svg" alt="" />
       </button>
-        <LangSwitch/>
+      <LangSwitch />
     </div>
   </div>
 
-  <div v-if="isSettings" class="modal" @click="handleBackdropClick">
-  <Settings class="settings-window" @close="isSettings = false" />
-</div>
+  <div v-if="isSettings" class="modal">
+    <Settings
+      ref="settingsRef"
+      class="settings-window"
+      @close="isSettings = false"
+    />
+  </div>
 </template>
 
 <style scoped>

@@ -45,7 +45,7 @@ function getTranslatedTitle(title: string): string {
     default:
       return title; 
   }
-
+}
 
 function addCategory(): void {
   if (categotyTitle.value.trim() == "") {

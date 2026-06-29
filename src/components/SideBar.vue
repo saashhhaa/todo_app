@@ -34,6 +34,19 @@ function getTaskCount(categoryTitle: string): number {
   ).length;
 }
 
+function getTranslatedTitle(title: string): string {
+  switch (title) {
+    case "work":
+      return t("sideBar.categWork");
+    case "study":
+      return t("sideBar.categStudy");
+    case "personal":
+      return t("sideBar.categPersonal");
+    default:
+      return title; 
+  }
+
+
 function addCategory(): void {
   if (categotyTitle.value.trim() == "") {
     newCategoryFormVisible.value = false;
@@ -61,7 +74,7 @@ function addCategory(): void {
             v-for="category in categoriesStore.categories"
             @click="tasksStore.selectCategory(category.title)"
             :key="category.title"
-            :title="category.title"
+            :title="getTranslatedTitle(category.title)"
             :color="category.color"
             :count="getTaskCount(category.title)"
             :class="{ active: tasksStore.selectedCategory === category.title }"

@@ -48,6 +48,13 @@ export const lang = {
       titleTodayTasks: "На сегодня",
       noTasksMessage: "Задачи не найдены",
       deleteAllDoneTasksButton: "удалить готовые задачи",
+      col1: "Статус",
+      col2: "Задача",
+      col3: "Категория",
+      col4: "Дата",
+      col5: "Удалить",
+      switcherTable: 'Показать таблицой',
+      switcherGrid: 'Показать сеткой'
     },
     settings: {
       title: "Настройки",
@@ -59,19 +66,19 @@ export const lang = {
       logOutButton: "выйти",
       editButton: "изменить",
     },
-    wheather:{
-      code1: 'Ясно',
-      code2:'Переменная облачность',
-      code3:'Туман',
-      code4:'Дождь',
-      code5: 'Снег',
-      code6: 'Ливень',
-      code7: 'Облачно',
-      loading: 'Загрузка погоды...',
-      title1: 'Бишкек',
-      title2: 'температура: ',
-      title3: 'на улице: '
-    }
+    wheather: {
+      code1: "Ясно",
+      code2: "Переменная облачность",
+      code3: "Туман",
+      code4: "Дождь",
+      code5: "Снег",
+      code6: "Ливень",
+      code7: "Облачно",
+      loading: "Загрузка погоды...",
+      title1: "Бишкек",
+      title2: "температура: ",
+      title3: "на улице: ",
+    },
   },
   en: {
     login: {
@@ -120,6 +127,13 @@ export const lang = {
       titleTodayTasks: "Today tasks",
       noTasksMessage: "No tasks found",
       deleteAllDoneTasksButton: "delete done tasks",
+      col1: "Status",
+      col2: "Task",
+      col3: "Category",
+      col4: "Date",
+      col5: "Delete",
+      switcherTable: 'Switch to table',
+      switcherGrid: 'Switch to grid',
     },
     settings: {
       title: "Settings",
@@ -131,19 +145,19 @@ export const lang = {
       logOutButton: "log out",
       editButton: "edit",
     },
-    wheather:{
-      code1: 'Clear',
-      code2:'Partly cloudy',
-      code3:'Foggy',
-      code4:'Rainy',
-      code5: 'Snowy',
-      code6: 'Heavy rain',
-      code7: 'Cloudy',
-      loading: 'Wheather loading...',
-      title1: 'Bishkek',
-      title2: 'temperature: ',
-      title3: 'outside: '
-    }
+    wheather: {
+      code1: "Clear",
+      code2: "Partly cloudy",
+      code3: "Foggy",
+      code4: "Rainy",
+      code5: "Snowy",
+      code6: "Heavy rain",
+      code7: "Cloudy",
+      loading: "Wheather loading...",
+      title1: "Bishkek",
+      title2: "temperature: ",
+      title3: "outside: ",
+    },
   },
 };
 

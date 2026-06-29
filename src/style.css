@@ -119,3 +119,15 @@ body.light-theme .taskCard.done {
 body.light-theme .weather-widget {
   color: rgb(0, 0, 0);
 }
+
+body.light-theme .viewSwitcher {
+  background-color: white;
+  filter: brightness(0.9);
+}
+
+body.light-theme table span {
+  color: black;
+}
+/* body.light-theme .table-date {
+  color: rgba(0, 0, 0, 0.694) !important;
+} */

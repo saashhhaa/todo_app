@@ -45,7 +45,6 @@ function addCategory(): void {
   categoryColor.value = "#1a9185";
   newCategoryFormVisible.value = false;
 }
-
 </script>
 
 <template>
@@ -105,7 +104,7 @@ function addCategory(): void {
         </div>
       </div>
     </div>
-    <Calendar/>
+    <Calendar />
     <Wheather />
     <div class="sideBarButtons">
       <button @click="isSettings = true" class="linkToPage">
@@ -206,6 +205,8 @@ img {
 .categories_list {
   display: grid;
   grid-template-columns: 1fr;
+  max-height: 25vh;
+  overflow-y: auto;
   gap: 10px;
 }
 

@@ -15,8 +15,10 @@ const newTaskCategory = ref("work");
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
 import "dayjs/locale/en";
+import TasksTable from "./TasksTable.vue";
 const todayDate = computed(() => dayjs().format("YYYY-MM-DD"));
 
+const viewDataMode = ref<"grid" | "table">("grid");
 
 const { t, locale } = useI18n();
 
@@ -61,10 +63,9 @@ const availableCategories = computed(() => {
   return [...categories.categories, ...currCustomCategories];
 });
 
-
 function formatTaskDate(rawDate: string) {
   if (!rawDate) return "";
-  
+
   const dateObj = dayjs(rawDate);
   if (!dateObj.isValid()) return null;
 
@@ -125,7 +126,22 @@ function createNewTask() {
       {{ $t("taskManager.titleActiveTasks") }}
     </h3>
 
-    <div v-if="filteredTasks.length > 0" class="grid">
+    <button
+      @click="
+        viewDataMode == 'table'
+          ? (viewDataMode = 'grid')
+          : (viewDataMode = 'table')
+      "
+      class="viewSwitcher"
+    >
+      {{
+        viewDataMode == "table"
+          ? $t("taskManager.switcherGrid")
+          : $t("taskManager.switcherTable")
+      }}
+    </button>
+
+    <div v-if="filteredTasks.length > 0 && viewDataMode == 'grid'" class="grid">
       <TaskCard
         :key="task.id"
         :id="task.id"
@@ -139,6 +155,11 @@ function createNewTask() {
         )"
       />
     </div>
+    <TasksTable
+      v-else-if="viewDataMode == 'table'"
+      :tasksList="filteredTasks"
+      :key="JSON.stringify(filteredTasks)"
+    />
 
     <p class="message" v-else>{{ $t("taskManager.noTasksMessage") }}</p>
   </div>
@@ -162,6 +183,18 @@ function createNewTask() {
   width: 100%;
   gap: 10px;
   margin: 5vh 0;
+}
+
+.viewSwitcher {
+  background-color: white;
+  filter: brightness(0.6);
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  position: absolute;
+  top: 315px;
+  right: 250px;
 }
 
 .createTask input[type="text"] {

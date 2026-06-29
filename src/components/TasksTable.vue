@@ -40,7 +40,12 @@
           >
             <template v-if="cell.column.id === 'isDone'">
               <img
-                @click="tasksStore.switchTaskState(row.original.id)"
+                @click="
+                  tasksStore.switchTaskState(
+                    row.original.id,
+                    row.original.createDate,
+                  )
+                "
                 class="status-icon"
                 :src="cell.getValue() ? doneIcon : activeIcon"
                 alt="status"
@@ -51,6 +56,44 @@
               <span :class="{ 'line-through': row.original.isDone }">
                 {{ cell.getValue() }}
               </span>
+
+              <template
+                v-if="
+                  getLeftDays(
+                    row.original.createDate,
+                    row.original.deadlineDate,
+                  ) !== null && !row.original.isDone
+                "
+              >
+                <span
+                  class="leftDays"
+                  v-if="
+                    getLeftDays(
+                      row.original.createDate,
+                      row.original.deadlineDate,
+                    )! > 0
+                  "
+                >
+                  {{ $t("taskManager.daysLeft") }}
+                  {{
+                    getLeftDays(
+                      row.original.createDate,
+                      row.original.deadlineDate,
+                    )
+                  }}
+                </span>
+
+                <span class="dead-text" v-let v-else>
+                  {{ $t("taskManager.deadlinedDays") }}
+                  {{
+                    getAbsDeadlinedDays(
+                      row.original.createDate,
+                      row.original.deadlineDate,
+                    )
+                  }}
+                  {{ $t("taskManager.days") }}
+                </span>
+              </template>
             </template>
 
             <template v-else-if="cell.column.id === 'category'">
@@ -63,7 +106,23 @@
               </span>
             </template>
 
-            <template v-else-if="cell.column.id === 'date'">
+            <template v-else-if="cell.column.id === 'deadlineDate'">
+              <span class="deadline">
+                {{
+                  cell.getValue()
+                    ? formatTaskDate(cell.getValue() as string)
+                    : "—"
+                }}
+              </span>
+            </template>
+            <template v-else-if="cell.column.id === 'createDate'">
+              {{
+                cell.getValue()
+                  ? formatTaskDate(cell.getValue() as string)
+                  : "—"
+              }}
+            </template>
+            <template v-else-if="cell.column.id === 'doneDate'">
               {{
                 cell.getValue()
                   ? formatTaskDate(cell.getValue() as string)
@@ -100,21 +159,34 @@ import doneIcon from "../assets/doneIcon.svg";
 import activeIcon from "../assets/circleIcon.svg";
 import { useI18n } from "vue-i18n";
 
-const props = defineProps<{
-  tasksList: any[];
-}>();
-
-const tasksStore = useTasksSStore();
-
 interface TaskItem {
   id: number;
   userId: number;
   title: string;
-  date: string;
+  createDate: string;
+  doneDate: string;
+  deadlineDate: string;
+  deadlineDateNoFormat: string;
   category: string;
   catCol: string;
   isDone: boolean;
 }
+const props = defineProps<{
+  tasksList: any[];
+}>();
+
+function getLeftDays(createDate: string, deadlineNoFormat: string) {
+  if (!deadlineNoFormat || !createDate) return null;
+
+  const start = dayjs(createDate);
+  const end = dayjs(deadlineNoFormat);
+
+  if (!start.isValid() || !end.isValid()) return null;
+
+  return end.diff(start, "day");
+}
+
+const tasksStore = useTasksSStore();
 
 const { locale, t } = useI18n();
 
@@ -143,7 +215,9 @@ const columns = [
   columnHelper.accessor("isDone", { header: "taskManager.col1" }),
   columnHelper.accessor("title", { header: "taskManager.col2" }),
   columnHelper.accessor("category", { header: "taskManager.col3" }),
-  columnHelper.accessor("date", { header: "taskManager.col4" }),
+  columnHelper.accessor("deadlineDate", { header: "taskManager.deadlineDate" }),
+  columnHelper.accessor("createDate", { header: "taskManager.createDate" }),
+  columnHelper.accessor("doneDate", { header: "taskManager.doneDate" }),
   columnHelper.display({ id: "delete", header: "taskManager.col5" }),
 ];
 
@@ -154,6 +228,15 @@ const table = useVueTable({
   columns,
   getCoreRowModel: getCoreRowModel(),
 });
+
+function getAbsDeadlinedDays(
+  createDate: string,
+  deadlineNoFormat: string,
+): number {
+  const days = getLeftDays(createDate, deadlineNoFormat);
+  if (days === null) return 0;
+  return Math.abs(days);
+}
 </script>
 
 <style scoped>
@@ -180,14 +263,14 @@ const table = useVueTable({
 
 .table-scroller {
   display: block;
-  height: 400px;
+  max-height: 400px;
   overflow-y: auto;
   width: 100%;
 }
 
 .custom-table tr {
   display: grid;
-  grid-template-columns: 60px 2fr 1fr 120px 60px;
+  grid-template-columns: 60px 2fr 1.2fr 110px 110px 110px 60px;
   align-items: center;
   width: 100%;
   box-sizing: border-box;
@@ -195,6 +278,7 @@ const table = useVueTable({
 
 .custom-table th,
 .custom-table td {
+  /* border: 1px red solid; */
   padding: 15px 20px;
   text-align: left;
   box-sizing: border-box;
@@ -206,10 +290,12 @@ const table = useVueTable({
 
 .custom-table tr {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .custom-table th {
   background-color: rgba(0, 0, 0, 0.2);
+  height: 50px;
   color: rgba(135, 137, 157, 0.8);
   font-size: 0.9rem;
 }
@@ -220,13 +306,14 @@ const table = useVueTable({
   justify-content: center;
   align-items: center;
 }
-
 span {
   color: white;
 }
 
-span {
-  color: white;
+.leftDays {
+  margin-left: 230px;
+  color: rgba(255, 255, 255, 0.419);
+  font-size: 12px;
 }
 
 .date {
@@ -239,13 +326,25 @@ img {
   display: block;
 }
 
+.dead {
+  background-color: rgba(255, 58, 58, 0.507);
+  margin-left: 130px;
+
+  color: rgb(96, 2, 2);
+}
+
 .line-through {
   text-decoration: line-through;
   filter: brightness(0.6);
 }
 
 .row-done {
-  background-color: rgba(89, 162, 134, 0.1);
+  background-color: rgba(87, 115, 105, 0.427) !important;
+  color: rgba(80, 181, 120, 0.529);
+}
+
+.row-done .deadline {
+  color: inherit;
 }
 
 .table-cat {
@@ -259,5 +358,16 @@ img {
   height: 6px;
   border-radius: 50%;
   display: inline-block;
+}
+
+.dead-text {
+  font-size: 12px;
+  margin-left: 250px;
+  color: rgb(255, 115, 115);
+  font-weight: bold;
+}
+
+.row-deadlined .deadline {
+  color: rgb(255, 140, 140);
 }
 </style>

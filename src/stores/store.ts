@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { i18n } from "../lang.ts";
-import { ref } from "vue";
+import { ref, type ComputedRef } from "vue";
+import dayjs from "dayjs";
 
 export interface User {
   id: number;
@@ -16,8 +17,11 @@ export interface Task {
   title: string;
   category: string;
   catCol: string;
-  date: string;
+  createDate: string;
+  doneDate: string;
+  deadlineDate: string;
   isDone: boolean;
+  isDeadlined: boolean;
 }
 
 export interface Category {
@@ -150,8 +154,27 @@ export const useTasksSStore = defineStore("tasks", {
     tasks: JSON.parse(localStorage.getItem("tasks") || "[]") as Task[],
     selectedCategory: "",
   }),
+  getters: {
+    getDeadlinedTasks: (state) => {
+      const usersStore = useUsersStore();
+      const currentUserId = usersStore.currentUser?.id;
+      const today = dayjs().format("YYYY-MM-DD");
+
+      return state.tasks.filter((task) => {
+        if (task.userId !== currentUserId || task.isDone || !task.deadlineDate) {
+          return false;
+        }
+        return dayjs(today).isAfter(dayjs(task.deadlineDate)) ;
+      });
+    }
+  },
   actions: {
-    createNewTask(newTitle: string, newDate: string, newCategory: string) {
+    createNewTask(
+      newTitle: string,
+      newDeadline: string,
+      todayDate: string,
+      newCategory: string,
+    ) {
       const categories = useCategoriesStore();
       const users = useUsersStore();
       const found =
@@ -164,10 +187,13 @@ export const useTasksSStore = defineStore("tasks", {
         id: Date.now(),
         userId: users.currentUser.id,
         title: newTitle,
-        date: newDate || "No date",
+        createDate: todayDate,
+        doneDate: "",
+        deadlineDate: newDeadline || "",
         category: newCategory,
         catCol: found ? found.color : "#ffffff",
         isDone: false,
+        isDeadlined: false
       };
       this.tasks.push(newTask);
       localStorage.setItem("tasks", JSON.stringify(this.tasks));
@@ -176,12 +202,16 @@ export const useTasksSStore = defineStore("tasks", {
       this.tasks = this.tasks.filter((task) => task.id != taskToDelete);
       localStorage.setItem("tasks", JSON.stringify(this.tasks));
     },
-    switchTaskState(taskId: number): void {
+    switchTaskState(taskId: number, createDate: string): void {
       const taskToChange = this.tasks.find((task) => task.id == taskId);
       if (!taskToChange) {
         return;
       }
       taskToChange.isDone = !taskToChange.isDone;
+      !taskToChange.isDone
+        ? (taskToChange.doneDate = "-")
+        : (taskToChange.doneDate = createDate);
+
       localStorage.setItem("tasks", JSON.stringify(this.tasks));
     },
     selectCategory(categoryTitle: string): void {
@@ -193,7 +223,7 @@ export const useTasksSStore = defineStore("tasks", {
     },
     clearCategory(): void {
       this.selectedCategory = "";
-    },
+    }
   },
 });
 
@@ -237,8 +267,7 @@ export const useThemeStore = defineStore("theme", {
   },
 });
 
-export const useDateStore = defineStore('date', () => {
-  const selectedDate = ref(new Date())
-  return {selectedDate}
-
-})
+export const useDateStore = defineStore("date", () => {
+  const selectedDate = ref(new Date());
+  return { selectedDate };
+});

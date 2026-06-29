@@ -41,6 +41,7 @@ export const lang = {
       filterAll: "все",
       filterActive: "активно",
       filterDone: "сделано",
+      filterDeadlined: 'просрочено',
       tasks: "задач",
       titleAllTasks: "Все задачи",
       titleActiveTasks: "Активные задачи",
@@ -51,10 +52,15 @@ export const lang = {
       col1: "Статус",
       col2: "Задача",
       col3: "Категория",
-      col4: "Дата",
       col5: "Удалить",
       switcherTable: 'Показать таблицой',
-      switcherGrid: 'Показать сеткой'
+      switcherGrid: 'Показать сеткой',
+      deadlineDate: 'Дедлайн',
+      createDate: 'Создано',
+      doneDate: 'Выполнено',
+      daysLeft: 'осталось дней:',
+      deadlinedDays: 'просрочено на',
+      days: 'дней'
     },
     settings: {
       title: "Настройки",
@@ -78,6 +84,7 @@ export const lang = {
       title1: "Бишкек",
       title2: "температура: ",
       title3: "на улице: ",
+      error:'Нет прогноза'
     },
   },
   en: {
@@ -120,20 +127,27 @@ export const lang = {
       filterAll: "all",
       filterActive: "active",
       filterDone: "done",
+      filterDeadlined: 'deadlined',
       tasks: "tasks",
       titleAllTasks: "All tasks",
       titleActiveTasks: "Active tasks",
       titleDoneTasks: "Done tasks",
       titleTodayTasks: "Today tasks",
+      titleDeadlinedTasks: "Deadlined tasks",
       noTasksMessage: "No tasks found",
       deleteAllDoneTasksButton: "delete done tasks",
       col1: "Status",
       col2: "Task",
       col3: "Category",
-      col4: "Date",
       col5: "Delete",
       switcherTable: 'Switch to table',
       switcherGrid: 'Switch to grid',
+      deadlineDate: 'Deadline',
+      createDate: 'Created',
+      doneDate: 'Done date',
+      daysLeft: 'days left:',
+      deadlinedDays: 'deadlined for ',
+      days: 'days'
     },
     settings: {
       title: "Settings",
@@ -157,6 +171,7 @@ export const lang = {
       title1: "Bishkek",
       title2: "temperature: ",
       title3: "outside: ",
+      error:'No forecast'
     },
   },
 };

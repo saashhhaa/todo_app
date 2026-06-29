@@ -8,7 +8,7 @@ const props = defineProps({
 });
 const currMode = ref("all");
 
-function changeMode(mode: "today" | "all" | "active" | "done") {
+function changeMode(mode: "today" | "all" | "active" | "done" | "deadlined") {
   currMode.value = mode;
   emit("switchModes", mode);
 }
@@ -42,6 +42,12 @@ function changeMode(mode: "today" | "all" | "active" | "done") {
       >
         {{ $t("taskManager.filterDone") }}
       </button>
+      <button
+        @click="changeMode('deadlined')"
+        :class="currMode == 'deadlined' ? 'filterMode  deadlined' : 'filterMode'"
+      >
+        {{ $t("taskManager.filterDeadlined") }}
+      </button>
     </div>
     <p class="tasksAmount">
       {{ props.tasks?.length }} {{ $t("taskManager.tasks") }}
@@ -70,6 +76,11 @@ function changeMode(mode: "today" | "all" | "active" | "done") {
   border: 1px solid var(--accent-color);
   color: var(--accent-color);
   border-radius: 10px;
+}
+
+.deadlined {
+  border: 1px solid rgba(255, 0, 0, 0.689);
+  color: rgba(255, 62, 62, 0.906);
 }
 
 .cover {

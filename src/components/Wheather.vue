@@ -56,11 +56,11 @@ const condition = computed(() => {
   <div class="weather-widget">
     <div v-if="loading">{{ $t("wheather.loading") }}</div>
 
-    <div v-else-if="error">{{ $t("wheather.error") }}</div>
+    <div v-else-if="error"></div>
 
     <div v-else-if="result?.weather === null">
       <h3>{{ $t("wheather.title1") }}</h3>
-      <p>error</p> 
+      <p>{{ $t("wheather.error") }}</p> 
     </div>
 
     <div v-else>

@@ -9,7 +9,7 @@ import Filter from "./Filter.vue";
 import TaskCard from "./TaskCard.vue";
 import { useI18n } from "vue-i18n";
 const newTaskTitle = ref("");
-const newTaskDate = ref('');
+const newTaskDeadline = ref("");
 const newTaskCategory = ref("work");
 
 import dayjs from "dayjs";
@@ -47,11 +47,16 @@ const filteredTasks = computed(() => {
     return result.filter((task: { isDone: boolean }) => !task.isDone);
   } else if (currentMode.value === "done") {
     return result.filter((task: { isDone: boolean }) => task.isDone);
+  } else if (currentMode.value === "deadlined") {
+    return tasks.getDeadlinedTasks.filter((task) =>
+      tasks.selectedCategory ? task.category === tasks.selectedCategory : true,
+    );
   } else if (currentMode.value === "today") {
     return result.filter(
-      (task: { date: string }) => task.date === todayDate.value,
+      (task: { deadlineDate: string }) => task.deadlineDate === todayDate.value,
     );
   }
+
   return result;
 });
 
@@ -77,12 +82,13 @@ function createNewTask() {
 
   tasks.createNewTask(
     newTaskTitle.value,
-    newTaskDate.value ? newTaskDate.value : "",
+    newTaskDeadline.value ? newTaskDeadline.value : "", // when deadline
+    todayDate.value, //when created
     newTaskCategory.value,
   );
 
   newTaskTitle.value = "";
-  newTaskDate.value = '';
+  newTaskDeadline.value = "";
 }
 </script>
 
@@ -96,8 +102,15 @@ function createNewTask() {
       />
       <div class="date">
         <label for="date"><img src="/calendarIcon.svg" alt="" /></label>
-        <input v-model="newTaskDate" type="date" name="" id="date" required />
+        <input
+          :min="todayDate"
+          v-model="newTaskDeadline"
+          type="date"
+          name=""
+          id="date"
+        />
       </div>
+
       <div class="categorySwitch">
         <label for="category"><img src="/categoryIcon.svg" alt="" /></label>
         <select v-model="newTaskCategory" name="category" id="">
@@ -125,6 +138,9 @@ function createNewTask() {
     <h3 v-if="currentMode == 'active'">
       {{ $t("taskManager.titleActiveTasks") }}
     </h3>
+    <h3 v-if="currentMode == 'deadlined'">
+      {{ $t("taskManager.titleDeadlinedTasks") }}
+    </h3>
 
     <button
       @click="
@@ -147,7 +163,11 @@ function createNewTask() {
         :id="task.id"
         :title="task.title"
         :category="task.category"
-        :date="formatTaskDate(task.date) || ''"
+        :deadlineDate="formatTaskDate(task.deadlineDate) || ''"
+        :deadlineDateNoFormat="task.deadlineDate || ''"
+        :createDate="todayDate || ''"
+        :doneDate="'-'"
+        :isDeadlined="task.isDeadlined"
         :catColor="task.catCol"
         :isDone="task.isDone"
         v-for="task in filteredTasks.filter(

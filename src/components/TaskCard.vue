@@ -1,19 +1,24 @@
 <script setup lang="ts">
 import { useCategoriesStore, useTasksSStore } from "../stores/store";
-import doneIcon from '../assets/doneIcon.svg'
-import activeIcon from '../assets/circleIcon.svg'
+import doneIcon from "../assets/doneIcon.svg";
+import activeIcon from "../assets/circleIcon.svg";
+import { computed } from "vue";
+import dayjs from "dayjs";
 
 interface Task {
   id: number;
   title: string;
   category: string;
   catColor: string;
-  date: string;
+  createDate: string;
+  doneDate: string;
+  deadlineDate: string;
+  deadlineDateNoFormat: string;
   isDone: boolean;
+  isDeadlined: boolean;
 }
 
 const props = defineProps<Task>();
-
 const tasks = useTasksSStore();
 const categories = useCategoriesStore();
 
@@ -26,19 +31,40 @@ function deleteTask() {
     catAmount.count -= 1;
   }
 }
+
+const leftDays = computed(() => {
+  if (!props.deadlineDateNoFormat) return null;
+
+  const start = dayjs(props.createDate);
+  const end = dayjs(props.deadlineDateNoFormat);
+
+  if (!start.isValid() || !end.isValid()) return null;
+
+  return end.diff(start, "day");
+});
 </script>
 
 <template>
-  <div :class="props.isDone ? 'taskCard done' : 'taskCard'">
+  <div
+    :class="[
+      'taskCard',
+      {
+        done: props.isDone,
+        deadlinedCard: leftDays !== null && leftDays < 0 && !props.isDone,
+      },
+    ]"
+  >
     <div class="cover">
       <img
-        @click="tasks.switchTaskState(props.id)"
+        @click="tasks.switchTaskState(props.id, createDate)"
         class="doneButton"
         :src="props.isDone ? doneIcon : activeIcon"
         alt=""
       />
       <div class="taskInfo">
-        <div class="taskTitle">{{ props.title }}</div>
+        <div class="taskTitle">
+          {{ props.title }}
+        </div>
         <div class="cover">
           <div class="category" :style="{ color: props.catColor }">
             <div
@@ -47,10 +73,20 @@ function deleteTask() {
             ></div>
             {{ props.category }}
           </div>
-          <div v-if="props.date != null" class="date">
+          <div v-if="props.deadlineDate != ''" class="date">
             <img src="/calendarIcon.svg" />
-            <div class="">{{ props.date }}</div>
+            <div class="">{{ props.deadlineDate }}</div>
           </div>
+          <span v-if="leftDays !== null && leftDays >= 0 && !props.isDone">
+            {{ $t("taskManager.daysLeft") }} {{ leftDays }}
+          </span>
+          <span
+            class="dead"
+            v-if="leftDays !== null && leftDays < 0 && !props.isDone"
+          >
+            {{ $t("taskManager.deadlinedDays") }} {{ Math.abs(leftDays) }}
+            {{ $t("taskManager.days") }}
+          </span>
         </div>
       </div>
     </div>
@@ -147,5 +183,15 @@ function deleteTask() {
 
 .taskCard:hover .deleteTask {
   opacity: 1;
+}
+
+.deadlinedCard {
+  background-color: rgba(255, 58, 58, 0.507);
+}
+
+span {
+  color: rgba(255, 255, 255, 0.419);
+  margin-left: 40px;
+  font-size: 12px;
 }
 </style>

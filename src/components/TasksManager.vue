@@ -9,7 +9,7 @@ import Filter from "./Filter.vue";
 import TaskCard from "./TaskCard.vue";
 import { useI18n } from "vue-i18n";
 const newTaskTitle = ref("");
-const newTaskDate = ref(null);
+const newTaskDate = ref('');
 const newTaskCategory = ref("work");
 
 import dayjs from "dayjs";
@@ -82,7 +82,7 @@ function createNewTask() {
   );
 
   newTaskTitle.value = "";
-  newTaskDate.value = null;
+  newTaskDate.value = '';
 }
 </script>
 
@@ -147,7 +147,7 @@ function createNewTask() {
         :id="task.id"
         :title="task.title"
         :category="task.category"
-        :date="formatTaskDate(task.date) ?? undefined"
+        :date="formatTaskDate(task.date) || ''"
         :catColor="task.catCol"
         :isDone="task.isDone"
         v-for="task in filteredTasks.filter(

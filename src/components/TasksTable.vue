@@ -1,3 +1,93 @@
+<template>
+  <div class="table-container">
+    <table class="custom-table">
+      <thead>
+        <tr
+          v-for="headerGroup in table.getHeaderGroups()"
+          :key="headerGroup.id"
+        >
+          <th
+            v-for="header in headerGroup.headers"
+            :key="header.id"
+            :class="`col-${header.column.id}`"
+          >
+            <template
+              v-if="
+                header.column.id === 'isDone' || header.column.id === 'delete'
+              "
+            ></template>
+
+            <template v-else>
+              {{ t(header.column.columnDef.header as string) }}
+            </template>
+          </th>
+        </tr>
+      </thead>
+
+      <RecycleScroller
+        component="tbody"
+        class="table-scroller"
+        :items="table.getRowModel().rows"
+        :item-size="56"
+        key-field="id"
+        v-slot="{ item: row }"
+      >
+        <tr :key="row.id" :class="{ 'row-done': row.original.isDone }">
+          <td
+            v-for="cell in row.getVisibleCells()"
+            :key="cell.id"
+            :class="`col-${cell.column.id}`"
+          >
+            <template v-if="cell.column.id === 'isDone'">
+              <img
+                @click="tasksStore.switchTaskState(row.original.id)"
+                class="status-icon"
+                :src="cell.getValue() ? doneIcon : activeIcon"
+                alt="status"
+              />
+            </template>
+
+            <template v-else-if="cell.column.id === 'title'">
+              <span :class="{ 'line-through': row.original.isDone }">
+                {{ cell.getValue() }}
+              </span>
+            </template>
+
+            <template v-else-if="cell.column.id === 'category'">
+              <span class="table-cat" :style="{ color: row.original.catCol }">
+                <span
+                  class="cat-dot"
+                  :style="{ backgroundColor: row.original.catCol }"
+                ></span>
+                {{ cell.getValue() }}
+              </span>
+            </template>
+
+            <template v-else-if="cell.column.id === 'date'">
+              {{
+                cell.getValue()
+                  ? formatTaskDate(cell.getValue() as string)
+                  : "—"
+              }}
+            </template>
+
+            <template v-else-if="cell.column.id === 'delete'">
+              <img
+                @click="
+                  handleDeleteTask(row.original.id, row.original.category)
+                "
+                class="deleteTask"
+                src="/deleteIcon.svg"
+                alt="delete"
+              />
+            </template>
+          </td>
+        </tr>
+      </RecycleScroller>
+    </table>
+  </div>
+</template>
+
 <script setup lang="ts">
 import {
   useVueTable,
@@ -58,90 +148,13 @@ const columns = [
 ];
 
 const table = useVueTable({
-  data: props.tasksList,
+  get data() {
+    return props.tasksList;
+  },
   columns,
   getCoreRowModel: getCoreRowModel(),
 });
 </script>
-
-<template>
-  <div class="table-container">
-    <table class="custom-table">
-      <thead>
-        <tr
-          v-for="headerGroup in table.getHeaderGroups()"
-          :key="headerGroup.id"
-        >
-          <th v-for="header in headerGroup.headers" :key="header.id">
-            <template
-              v-if="
-                header.column.id === 'isDone' || header.column.id === 'delete'
-              "
-            ></template>
-
-            <template v-else>
-              {{ t(header.column.columnDef.header as string) }}
-            </template>
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr
-          v-for="row in table.getRowModel().rows"
-          :key="row.id"
-          :class="{ 'row-done': row.original.isDone }"
-        >
-          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
-            <template v-if="cell.column.id === 'isDone'">
-              <img
-                @click="tasksStore.switchTaskState(row.original.id)"
-                class="status-icon"
-                :src="cell.getValue() ? doneIcon : activeIcon"
-                alt="status"
-              />
-            </template>
-
-            <template v-else-if="cell.column.id === 'title'">
-              <span :class="{ 'line-through': row.original.isDone }">
-                {{ cell.getValue() }}
-              </span>
-            </template>
-
-            <template v-else-if="cell.column.id === 'category'">
-              <span class="table-cat" :style="{ color: row.original.catCol }">
-                <span
-                  class="cat-dot"
-                  :style="{ backgroundColor: row.original.catCol }"
-                ></span>
-                {{ cell.getValue() }}
-              </span>
-            </template>
-
-            <template v-else-if="cell.column.id === 'date'">
-              {{
-                cell.getValue()
-                  ? formatTaskDate(cell.getValue() as string)
-                  : "—"
-              }}
-            </template>
-
-            <template v-else-if="cell.column.id === 'delete'">
-              <img
-                @click="
-                  handleDeleteTask(row.original.id, row.original.category)
-                "
-                class="deleteTask"
-                src="/deleteIcon.svg"
-                alt="delete"
-              />
-            </template>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</template>
 
 <style scoped>
 .table-container {
@@ -151,18 +164,47 @@ const table = useVueTable({
 }
 
 .custom-table {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  border-collapse: collapse;
   background-color: var(--blackTheme-back-secondary);
   border-radius: 10px;
   overflow: hidden;
   color: white;
 }
 
+.custom-table thead {
+  display: block;
+  width: 100%;
+}
+
+.table-scroller {
+  display: block;
+  height: 400px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.custom-table tr {
+  display: grid;
+  grid-template-columns: 60px 2fr 1fr 120px 60px;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .custom-table th,
 .custom-table td {
   padding: 15px 20px;
   text-align: left;
+  box-sizing: border-box;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-table tr {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -172,11 +214,22 @@ const table = useVueTable({
   font-size: 0.9rem;
 }
 
+.col-isDone,
+.col-delete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 span {
   color: white;
 }
 
-.table-date {
+span {
+  color: white;
+}
+
+.date {
   color: rgba(255, 255, 255, 0.641);
 }
 img {

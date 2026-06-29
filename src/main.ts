@@ -8,12 +8,15 @@ import { DefaultApolloClient } from "@vue/apollo-composable";
 import { apolloClient } from "./apollo.ts";
 import VCalendar from 'v-calendar'
 import 'v-calendar/style.css'
+import VueVirtualScroller from 'vue-virtual-scroller'
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 // import { PrimeVue } from "@primevue/core";
 
 
 const app = createApp(App)
 app.use(router)
 app.use(createPinia())
+app.use(VueVirtualScroller)
 app.use(i18n)
 app.use(VCalendar, {})
 app.provide(DefaultApolloClient, apolloClient)

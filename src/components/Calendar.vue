@@ -6,7 +6,7 @@ const dateStore = useDateStore()
 
 </script>
 
-<template>
+<template  >
     <VDatePicker 
       v-model="dateStore.selectedDate" 
       mode="date"
@@ -14,7 +14,3 @@ const dateStore = useDateStore()
       expanded
     />
 </template>
-
-<style scoped>
-
-</style>

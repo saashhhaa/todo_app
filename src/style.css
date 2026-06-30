@@ -133,3 +133,23 @@ body.light-theme table span {
 } */
 
 
+
+body.light-theme  .loginCard{
+  background-color: rgb(201, 201, 214);
+}
+body.light-theme  .loginCard input{
+  background-color: rgb(197, 197, 208);
+  color: black !important;
+}
+
+body.light-theme  .loginCard input::placeholder{
+  color: rgb(149, 149, 164) !important;
+}
+
+body.light-theme  .loginPage h1{
+ color: rgb(197, 197, 208);
+}
+
+body.light-theme span {
+  color: grey;
+}

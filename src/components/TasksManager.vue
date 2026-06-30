@@ -285,4 +285,43 @@ h3 {
   margin-top: 30px;
   color: rgba(135, 137, 157, 0.604);
 }
+
+
+@media (max-width: 400px) {
+  .createTask {
+    flex-direction: column;
+    width: 100%;
+    max-width: 80vw;
+    align-items: center;
+  }
+  .createTask input {
+    width: 90% !important;
+  }
+  .date, .categorySwitch  {
+    width: 90%;
+    padding: 5px 20px;
+  }
+  .createTask button {
+    width: 100%;
+  }
+
+  .grid {
+    display: flex;
+    flex-direction: column;
+    /* width: 100vw */
+  }
+
+  .message {
+    margin-top: 10vh;
+  }
+
+  .viewSwitcher {
+    /* position: relative; */
+    /* font-size: 12px !important;
+    top: 70vh;
+    right: 20vw;; */
+    display: none;
+  }
+  
+}
 </style>

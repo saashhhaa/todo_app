@@ -316,4 +316,33 @@ input::placeholder {
 .linkToPage:hover {
   filter: brightness(1);
 }
+
+@media (max-width: 400px) {
+ * {
+  font-size: 14px !important;
+ }
+
+  .sideBar {
+    position: fixed;
+    z-index: 100;
+    background-color: rgb(238, 237, 242);
+    width: 65vw;
+    padding: 10px 30px;
+    height: fit-content;
+  }
+
+  .categories_list {
+    gap: 5px;
+    /* margin-bottom: -5; */
+  }
+
+  .sideBar .categoryInput{
+    width: 50%;
+  }
+
+  .modal {
+  position: fixed;
+  
+}
+}
 </style>

@@ -312,4 +312,15 @@ button:hover {
   grid-template-rows: repeat(4, 40px);
   gap: 10px;
 }
+
+@media (max-width: 400px) {
+  .loginPage {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .loginCard {
+    padding: 5vh 10vw 
+  }
+} 
 </style>

@@ -370,4 +370,5 @@ img {
 .row-deadlined .deadline {
   color: rgb(255, 140, 140);
 }
+
 </style>

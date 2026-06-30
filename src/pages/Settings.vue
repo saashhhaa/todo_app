@@ -326,4 +326,50 @@ input:hover {
 .hiddenFileInput {
   display: none;
 }
+
+@media (max-width: 400px) {
+
+.settings {
+  width: 80vw;
+  position: fixed !important;
+  min-height: 60vh;
+  height: fit-content;
+  background-color: var(--blackTheme-back);
+  border-radius: 10px;
+  padding: 4vh 5vw;
+}
+  .cover {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .editButton {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .cover2 {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .username {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .email {
+    font-size: 14px;
+    opacity: 0.7;
+  }
+
+}
 </style>

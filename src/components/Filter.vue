@@ -116,4 +116,30 @@ button:hover {
   border: 1px solid rgb(67, 146, 237);
   color: rgb(102, 167, 241);
 }
+
+@media (max-width: 400px) {
+ .filter {
+  flex-direction: column;
+  align-items: start;
+  gap: 20px;
+  margin-bottom: 40px;
+ }
+ .filter .cover {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* margin-left: -25vw; */
+}
+
+ .cover button {
+  padding: 5px 5px;
+ }
+
+
+ .filter .cover img{
+  display: none;
+ }
+
+
+  
+}
 </style>

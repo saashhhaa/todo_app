@@ -1,17 +1,17 @@
 <script setup lang="js">
-import {useTasksSStore, useUsersStore } from "../stores/store";
+import { useTasksSStore, useUsersStore } from "../stores/store";
 const usersStore = useUsersStore();
 const tasks = useTasksSStore();
 import { computed } from "vue";
 import TasksManager from "./TasksManager.vue";
 import { useI18n } from "vue-i18n";
-import defaulProfileImage from '../assets/profileImageTest.jpg'
+import defaulProfileImage from "../assets/profileImageTest.jpg";
 
-const {t} = useI18n()
-const {locale} = useI18n()
+const { t } = useI18n();
+const { locale } = useI18n();
 
 const date = computed(() => {
- const currentLocale = locale.value === "en" ? "en-US" : "ru-RU";
+  const currentLocale = locale.value === "en" ? "en-US" : "ru-RU";
   const today = new Date();
   return new Intl.DateTimeFormat(currentLocale, {
     weekday: "long",
@@ -37,7 +37,7 @@ function deleteAllDone() {
         <div class="block">
           <h1>TodoApp</h1>
           <p class="current-user-greeting">
-            {{ $t('taskManager.greeting') }}
+            {{ $t("taskManager.greeting") }}
             {{ usersStore.currentUser?.username }}!
           </p>
         </div>
@@ -46,7 +46,7 @@ function deleteAllDone() {
     </div>
     <TasksManager />
     <button @click="deleteAllDone" class="deleteAll">
-      {{ $t('taskManager.deleteAllDoneTasksButton') }}
+      {{ $t("taskManager.deleteAllDoneTasksButton") }}
       <img src="/deleteIcon.svg" alt="" />
     </button>
   </div>
@@ -113,5 +113,29 @@ function deleteAllDone() {
 
 .current-user-greeting {
   filter: brightness(0.6);
+}
+
+@media (max-width: 400px) {
+  .main {
+    margin: 0;
+    padding: 5vh 10vw;
+
+    /* background-color: antiquewhite; */
+  }
+
+  .main .cover {
+    flex-direction: column;
+    align-items: start;
+    width: 80%;
+  }
+
+  .main .cover .date {
+    margin-top: 20px;
+  }
+  .deleteAll {
+    position: relative;
+    bottom: -30px;
+    left: 5vw;
+  }
 }
 </style>

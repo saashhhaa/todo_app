@@ -65,7 +65,7 @@ const leftDays = computed(() => {
         <div class="taskTitle">
           {{ props.title }}
         </div>
-        <div class="cover">
+        <div class="cover2">
           <div class="category" :style="{ color: props.catColor }">
             <div
               class="categotyColor"
@@ -162,7 +162,8 @@ const leftDays = computed(() => {
   transform: scale(1.01);
 }
 
-.cover {
+.cover,
+.cover2 {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -193,5 +194,30 @@ span {
   color: rgba(255, 255, 255, 0.419);
   margin-left: 40px;
   font-size: 12px;
+}
+
+@media (max-width: 400px) {
+  .taskCard {
+    width: 80%;
+    padding: 20px 20px;
+  }
+  .cover {
+    gap: 0px;
+  }
+
+  .cover2 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+  }
+
+  span {
+    margin-left: 0px;
+  }
+
+  .cover .doneButton {
+    width: 25px;
+  }
+  
 }
 </style>

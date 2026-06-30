@@ -55,4 +55,22 @@ const sideBarIsVisible = ref(true);
 .manageSideBar:hover {
   filter: brightness(1);
 }
+
+@media (max-width: 400px) {
+
+  .manageSideBar {
+    /* visibility: hidden !important; */
+    left: 85vw;
+  }
+
+  .manageSideBar.hidden{
+    left: 82vw
+  }
+
+  .homepage {
+    padding-top: 5vh;
+    padding-right: 0;
+  }
+
+}
 </style>

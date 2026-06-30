@@ -83,4 +83,10 @@ function deleteCategory(): void {
   filter: brightness(1.3);
   cursor: pointer;
 }
+
+@media (max-width: 400px) {
+  .category {
+    padding: 10px 20px;
+  }
+}
 </style>

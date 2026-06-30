@@ -43,7 +43,7 @@ function getTranslatedTitle(title: string): string {
     case "personal":
       return t("sideBar.categPersonal");
     default:
-      return title; 
+      return title;
   }
 }
 
@@ -215,6 +215,15 @@ img {
   border-bottom: 1px solid rgba(135, 137, 157, 0.604);
 }
 
+@media (max-width: 1200px) {
+  .sideBar {
+    width: 70vw;
+    position: fixed;
+    z-index: 100;
+    background-color: rgb(238, 237, 242);
+  }
+}
+
 .categories_list {
   display: grid;
   grid-template-columns: 1fr;
@@ -318,9 +327,9 @@ input::placeholder {
 }
 
 @media (max-width: 400px) {
- * {
-  font-size: 14px !important;
- }
+  * {
+    font-size: 14px !important;
+  }
 
   .sideBar {
     position: fixed;
@@ -336,13 +345,12 @@ input::placeholder {
     /* margin-bottom: -5; */
   }
 
-  .sideBar .categoryInput{
+  .sideBar .categoryInput {
     width: 50%;
   }
 
   .modal {
-  position: fixed;
-  
-}
+    position: fixed;
+  }
 }
 </style>

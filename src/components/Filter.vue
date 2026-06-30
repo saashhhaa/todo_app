@@ -64,6 +64,9 @@ function changeMode(mode: "today" | "all" | "active" | "done" | "deadlined") {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 100%;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .cover img {
@@ -85,7 +88,9 @@ function changeMode(mode: "today" | "all" | "active" | "done" | "deadlined") {
 
 .cover {
   display: flex;
+  max-width: 100%;
   gap: 10px;
+  flex-wrap: wrap;
   align-items: center;
 }
 button {

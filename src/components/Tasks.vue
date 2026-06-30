@@ -55,8 +55,8 @@ function deleteAllDone() {
 <style scoped>
 .deleteAll {
   position: absolute;
-  bottom: 20px;
-  right: 40px;
+  bottom: -2vh;
+  right: 0vw;
   background-color: transparent;
   border: 1px solid rgb(255, 118, 118);
   padding: 10px 20px;
@@ -65,7 +65,9 @@ function deleteAllDone() {
   display: flex;
   gap: 10px;
   color: rgb(255, 118, 118);
-  align-items: center;
+  align-items: center;  position: relative;
+    /* bottom: -30px; */
+    /* left: 5vw; */
 }
 
 .deleteAll:hover {
@@ -87,7 +89,6 @@ function deleteAllDone() {
   width: 100%;
   margin: 5vh 5vw 0 2vw;
   padding: 2vh 3vw;
-
   /* background-color: antiquewhite; */
 }
 
@@ -98,10 +99,13 @@ function deleteAllDone() {
 }
 
 .cover {
-  width: 100%;
+  max-width: 100%;
+  width: 80%;
+  gap: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   padding-bottom: 2vh;
   border-bottom: 1px solid rgb(92, 94, 117);
 }

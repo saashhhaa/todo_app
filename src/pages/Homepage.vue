@@ -56,6 +56,19 @@ const sideBarIsVisible = ref(true);
   filter: brightness(1);
 }
 
+@media (max-width:1200px) {
+  .manageSideBar {
+    /* visibility: hidden !important; */
+    left: 85vw;
+  }
+
+  .manageSideBar.hidden{
+    left: 82vw
+  }
+
+}
+
+
 @media (max-width: 400px) {
 
   .manageSideBar {

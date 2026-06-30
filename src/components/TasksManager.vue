@@ -200,7 +200,8 @@ function createNewTask() {
 
 .createTask {
   display: flex;
-  width: 100%;
+  max-width: 100%;
+  flex-wrap: wrap;
   gap: 10px;
   margin: 5vh 0;
 }
@@ -213,12 +214,18 @@ function createNewTask() {
   border: none;
   font-size: 16px;
   position: absolute;
-  top: 315px;
-  right: 250px;
+  top: 33.9vh;
+  right: 20vw;
+}
+
+@media (max-width:850px) {
+  .viewSwitcher {
+    display: none;
+  }
 }
 
 .createTask input[type="text"] {
-  width: 60%;
+  width: 40%;
   color: white;
   font-size: 1rem;
   background-color: var(--blackTheme-back-secondary);
@@ -284,6 +291,15 @@ input:hover {
 h3 {
   margin-top: 30px;
   color: rgba(135, 137, 157, 0.604);
+}
+
+
+@media (max-width: 750px) { 
+  .grid{
+  grid-template-columns: repeat(1, 1fr);
+
+  }
+
 }
 
 

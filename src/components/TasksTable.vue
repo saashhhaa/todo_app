@@ -1,3 +1,95 @@
+<script setup lang="ts">
+import {
+  useVueTable,
+  getCoreRowModel,
+  createColumnHelper,
+} from "@tanstack/vue-table";
+import { useCategoriesStore, useTasksSStore } from "../stores/store.js";
+
+import doneIcon from "../assets/doneIcon.svg";
+import activeIcon from "../assets/circleIcon.svg";
+import { useI18n } from "vue-i18n";
+
+interface TaskItem {
+  id: number;
+  userId: number;
+  title: string;
+  createDate: string;
+  doneDate: string;
+  deadlineDate: string;
+  deadlineDateNoFormat: string;
+  category: string;
+  catCol: string;
+  isDone: boolean;
+}
+const props = defineProps<{
+  tasksList: any[];
+}>();
+
+function getLeftDays(createDate: string, deadlineNoFormat: string) {
+  if (!deadlineNoFormat || !createDate) return null;
+
+  const start = dayjs(createDate);
+  const end = dayjs(deadlineNoFormat);
+
+  if (!start.isValid() || !end.isValid()) return null;
+
+  return end.diff(start, "day");
+}
+
+const tasksStore = useTasksSStore();
+
+const { locale, t } = useI18n();
+
+const categoriesStore = useCategoriesStore();
+import dayjs from "dayjs";
+
+function formatTaskDate(rawDate: string) {
+  if (!rawDate) return "";
+  const dateObj = dayjs(rawDate);
+  if (!dateObj.isValid()) return "";
+  return dateObj.locale(locale.value).format("D MMMM");
+}
+
+function handleDeleteTask(id: number, categoryName: string) {
+  tasksStore.deleteTask(id);
+  const catAmount = categoriesStore.categories.find(
+    (cat) => cat.title === categoryName,
+  );
+  if (catAmount) {
+    catAmount.count -= 1;
+  }
+}
+
+const columnHelper = createColumnHelper<TaskItem>();
+const columns = [
+  columnHelper.accessor("isDone", { header: "taskManager.col1" }),
+  columnHelper.accessor("title", { header: "taskManager.col2" }),
+  columnHelper.accessor("category", { header: "taskManager.col3" }),
+  columnHelper.accessor("deadlineDate", { header: "taskManager.deadlineDate" }),
+  columnHelper.accessor("createDate", { header: "taskManager.createDate" }),
+  columnHelper.accessor("doneDate", { header: "taskManager.doneDate" }),
+  columnHelper.display({ id: "delete", header: "taskManager.col5" }),
+];
+
+const table = useVueTable({
+  get data() {
+    return props.tasksList;
+  },
+  columns,
+  getCoreRowModel: getCoreRowModel(),
+});
+
+function getAbsDeadlinedDays(
+  createDate: string,
+  deadlineNoFormat: string,
+): number {
+  const days = getLeftDays(createDate, deadlineNoFormat);
+  if (days === null) return 0;
+  return Math.abs(days);
+}
+</script>
+
 <template>
   <div class="table-container">
     <table class="custom-table">
@@ -147,98 +239,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import {
-  useVueTable,
-  getCoreRowModel,
-  createColumnHelper,
-} from "@tanstack/vue-table";
-import { useCategoriesStore, useTasksSStore } from "../stores/store.js";
-
-import doneIcon from "../assets/doneIcon.svg";
-import activeIcon from "../assets/circleIcon.svg";
-import { useI18n } from "vue-i18n";
-
-interface TaskItem {
-  id: number;
-  userId: number;
-  title: string;
-  createDate: string;
-  doneDate: string;
-  deadlineDate: string;
-  deadlineDateNoFormat: string;
-  category: string;
-  catCol: string;
-  isDone: boolean;
-}
-const props = defineProps<{
-  tasksList: any[];
-}>();
-
-function getLeftDays(createDate: string, deadlineNoFormat: string) {
-  if (!deadlineNoFormat || !createDate) return null;
-
-  const start = dayjs(createDate);
-  const end = dayjs(deadlineNoFormat);
-
-  if (!start.isValid() || !end.isValid()) return null;
-
-  return end.diff(start, "day");
-}
-
-const tasksStore = useTasksSStore();
-
-const { locale, t } = useI18n();
-
-const categoriesStore = useCategoriesStore();
-import dayjs from "dayjs";
-
-function formatTaskDate(rawDate: string) {
-  if (!rawDate) return "";
-  const dateObj = dayjs(rawDate);
-  if (!dateObj.isValid()) return "";
-  return dateObj.locale(locale.value).format("D MMMM");
-}
-
-function handleDeleteTask(id: number, categoryName: string) {
-  tasksStore.deleteTask(id);
-  const catAmount = categoriesStore.categories.find(
-    (cat) => cat.title === categoryName,
-  );
-  if (catAmount) {
-    catAmount.count -= 1;
-  }
-}
-
-const columnHelper = createColumnHelper<TaskItem>();
-const columns = [
-  columnHelper.accessor("isDone", { header: "taskManager.col1" }),
-  columnHelper.accessor("title", { header: "taskManager.col2" }),
-  columnHelper.accessor("category", { header: "taskManager.col3" }),
-  columnHelper.accessor("deadlineDate", { header: "taskManager.deadlineDate" }),
-  columnHelper.accessor("createDate", { header: "taskManager.createDate" }),
-  columnHelper.accessor("doneDate", { header: "taskManager.doneDate" }),
-  columnHelper.display({ id: "delete", header: "taskManager.col5" }),
-];
-
-const table = useVueTable({
-  get data() {
-    return props.tasksList;
-  },
-  columns,
-  getCoreRowModel: getCoreRowModel(),
-});
-
-function getAbsDeadlinedDays(
-  createDate: string,
-  deadlineNoFormat: string,
-): number {
-  const days = getLeftDays(createDate, deadlineNoFormat);
-  if (days === null) return 0;
-  return Math.abs(days);
-}
-</script>
-
 <style scoped>
 .table-container {
   width: 100%;
@@ -370,5 +370,4 @@ img {
 .row-deadlined .deadline {
   color: rgb(255, 140, 140);
 }
-
 </style>

@@ -18,6 +18,17 @@ interface Task {
   isDeadlined: boolean;
 }
 
+const leftDays = computed(() => {
+  if (!props.deadlineDateNoFormat) return null;
+
+  const start = dayjs(props.createDate);
+  const end = dayjs(props.deadlineDateNoFormat);
+
+  if (!start.isValid() || !end.isValid()) return null;
+
+  return end.diff(start, "day");
+});
+
 const props = defineProps<Task>();
 const tasks = useTasksSStore();
 const categories = useCategoriesStore();
@@ -31,17 +42,6 @@ function deleteTask() {
     catAmount.count -= 1;
   }
 }
-
-const leftDays = computed(() => {
-  if (!props.deadlineDateNoFormat) return null;
-
-  const start = dayjs(props.createDate);
-  const end = dayjs(props.deadlineDateNoFormat);
-
-  if (!start.isValid() || !end.isValid()) return null;
-
-  return end.diff(start, "day");
-});
 </script>
 
 <template>
@@ -65,12 +65,8 @@ const leftDays = computed(() => {
         <div class="taskTitle">
           {{ props.title }}
         </div>
-        <div class="cover2">
+        <div class="titleDetails">
           <div class="category" :style="{ color: props.catColor }">
-            <div
-              class="categotyColor"
-              :style="{ backgroundColor: props.catColor }"
-            ></div>
             {{ props.category }}
           </div>
           <div v-if="props.deadlineDate != ''" class="date">
@@ -128,11 +124,6 @@ const leftDays = computed(() => {
 .taskTitle {
   margin-bottom: 10px;
 }
-.categotyColor {
-  width: 5px;
-  height: 5px;
-  border-radius: 100px;
-}
 
 .date img {
   width: 15px;
@@ -150,9 +141,8 @@ const leftDays = computed(() => {
 .taskCard {
   justify-content: space-between;
   display: flex;
-  /* width: 100%; */
   background-color: var(--blackTheme-back-secondary);
-  padding: 20px 40px;
+  padding: 20px 20px;
   border-radius: 10px;
   align-items: center;
   margin: 20px 20px 0 0;
@@ -163,7 +153,7 @@ const leftDays = computed(() => {
 }
 
 .cover,
-.cover2 {
+.titleDetails {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -191,9 +181,7 @@ const leftDays = computed(() => {
 }
 
 span {
-  color: rgba(255, 255, 255, 0.419);
-  margin-left: 40px;
-  font-size: 12px;
+  color: rgba(178, 126, 22, 0.783);
 }
 
 @media (max-width: 400px) {
@@ -205,19 +193,13 @@ span {
     gap: 0px;
   }
 
-  .cover2 {
+  .titleDetails {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     width: 100%;
   }
-
-  span {
-    margin-left: 0px;
-  }
-
   .cover .doneButton {
     width: 25px;
   }
-  
 }
 </style>

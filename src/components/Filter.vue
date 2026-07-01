@@ -16,39 +16,38 @@ function changeMode(mode: "today" | "all" | "active" | "done" | "deadlined") {
 
 <template>
   <div class="filter">
-    <div class="cover">
-      <button
-        @click="changeMode('today')"
-        :class="currMode == 'today' ? 'filterMode activeToday' : 'filterMode'"
-      >
-        {{ $t("taskManager.filterToday") }}
-      </button>
-      <img src="/filterIcon.svg" alt="" />
-      <button
-        @click="changeMode('all')"
-        :class="currMode == 'all' ? 'filterMode activeAll' : 'filterMode'"
-      >
-        {{ $t("taskManager.filterAll") }}
-      </button>
-      <button
-        @click="changeMode('active')"
-        :class="currMode == 'active' ? 'filterMode activeActive' : 'filterMode'"
-      >
-        {{ $t("taskManager.filterActive") }}
-      </button>
-      <button
-        @click="changeMode('done')"
-        :class="currMode == 'done' ? 'filterMode  activeDone' : 'filterMode'"
-      >
-        {{ $t("taskManager.filterDone") }}
-      </button>
-      <button
-        @click="changeMode('deadlined')"
-        :class="currMode == 'deadlined' ? 'filterMode  deadlined' : 'filterMode'"
-      >
-        {{ $t("taskManager.filterDeadlined") }}
-      </button>
-    </div>
+    <img src="/filterIcon.svg" alt="" />
+
+    <button
+      @click="changeMode('today')"
+      :class="currMode == 'today' ? 'filterMode activeToday' : 'filterMode'"
+    >
+      {{ $t("taskManager.filterToday") }}
+    </button>
+    <button
+      @click="changeMode('all')"
+      :class="currMode == 'all' ? 'filterMode activeAll' : 'filterMode'"
+    >
+      {{ $t("taskManager.filterAll") }}
+    </button>
+    <button
+      @click="changeMode('active')"
+      :class="currMode == 'active' ? 'filterMode activeActive' : 'filterMode'"
+    >
+      {{ $t("taskManager.filterActive") }}
+    </button>
+    <button
+      @click="changeMode('done')"
+      :class="currMode == 'done' ? 'filterMode  activeDone' : 'filterMode'"
+    >
+      {{ $t("taskManager.filterDone") }}
+    </button>
+    <button
+      @click="changeMode('deadlined')"
+      :class="currMode == 'deadlined' ? 'filterMode  deadlined' : 'filterMode'"
+    >
+      {{ $t("taskManager.filterDeadlined") }}
+    </button>
     <p class="tasksAmount">
       {{ props.tasks?.length }} {{ $t("taskManager.tasks") }}
     </p>
@@ -56,43 +55,25 @@ function changeMode(mode: "today" | "all" | "active" | "done" | "deadlined") {
 </template>
 
 <style scoped>
-.tasksAmount {
-  color: rgba(255, 255, 255, 0.626);
-}
-
 .filter {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  max-width: 100%;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.cover img {
-  width: 30px;
-  height: 30px;
-  filter: brightness(0.5);
-}
-
-.activeToday {
-  border: 1px solid var(--accent-color);
-  color: var(--accent-color);
-  border-radius: 10px;
-}
-
-.deadlined {
-  border: 1px solid rgba(255, 0, 0, 0.689);
-  color: rgba(255, 62, 62, 0.906);
-}
-
-.cover {
-  display: flex;
   max-width: 100%;
   gap: 10px;
   flex-wrap: wrap;
-  align-items: center;
+  margin: 2vh;
 }
+
+img {
+  padding: 0 10px;
+  filter: brightness(0.5);
+}
+
+.tasksAmount {
+  color: rgba(255, 255, 255, 0.626);
+  margin-left: 10px;
+}
+
 button {
   padding: 10px 20px;
   background-color: var(--blackTheme-back-secondary);
@@ -105,6 +86,17 @@ button {
 
 button:hover {
   filter: brightness(1);
+}
+
+.activeToday {
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  border-radius: 10px;
+}
+
+.deadlined {
+  border: 1px solid rgba(255, 0, 0, 0.689);
+  color: rgba(255, 62, 62, 0.906);
 }
 
 .activeDone {
@@ -122,29 +114,4 @@ button:hover {
   color: rgb(102, 167, 241);
 }
 
-@media (max-width: 400px) {
- .filter {
-  flex-direction: column;
-  align-items: start;
-  gap: 20px;
-  margin-bottom: 40px;
- }
- .filter .cover {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  /* margin-left: -25vw; */
-}
-
- .cover button {
-  padding: 5px 5px;
- }
-
-
- .filter .cover img{
-  display: none;
- }
-
-
-  
-}
 </style>

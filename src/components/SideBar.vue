@@ -10,9 +10,11 @@ import Settings from "../pages/Settings.vue";
 import LangSwitch from "./LangSwitch.vue";
 import { useI18n } from "vue-i18n";
 import Wheather from "./Wheather.vue";
-
+import closeSideBarIcon from '../assets/closeSideBarIcon.svg'
+import openSideBarIcon from '../assets/openSideBarIcon.svg'
 import { onClickOutside } from "@vueuse/core";
 import Calendar from "./Calendar.vue";
+
 const settingsRef = ref(null);
 onClickOutside(settingsRef, () => {
   isSettings.value = false;
@@ -135,11 +137,35 @@ function addCategory(): void {
       @close="isSettings = false"
     />
   </div>
+
+    <!-- <img
+    :class="sideBarIsVisible ? 'manageSideBar' : 'manageSideBar hidden'"
+    :src="sideBarIsVisible ? closeSideBarIcon : openSideBarIcon"
+    alt=""
+    @click="sideBarIsVisible = !sideBarIsVisible"
+  /> -->
 </template>
 
 <style scoped>
-.modal {
-  position: absolute;
+.sideBar {
+position: fixed;
+top: 0;
+left: 0;
+  background-color: var(--blackTheme-back);
+
+width: 20vw;
+padding: 2vh 20px;
+height: 100vh;
+border-right: 1px rgba(255, 255, 255, 0.303) solid;
+display: flex;
+flex-direction: column;
+gap: 20px;
+}
+
+
+
+/* .modal {
+  position: fixed;
   top: 0;
   z-index: 100;
   left: 0;
@@ -202,7 +228,6 @@ img {
 }
 
 .sideBar {
-  background-color: var(--blackTheme-back);
   padding: 30px;
   width: 20vw;
   height: 90vh;
@@ -342,7 +367,6 @@ input::placeholder {
 
   .categories_list {
     gap: 5px;
-    /* margin-bottom: -5; */
   }
 
   .sideBar .categoryInput {
@@ -352,5 +376,5 @@ input::placeholder {
   .modal {
     position: fixed;
   }
-}
+} */
 </style>

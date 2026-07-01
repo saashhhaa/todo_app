@@ -10,10 +10,10 @@ const newUsernameInput = ref("");
 const previewImage = ref("");
 const editMode = ref<boolean>(false);
 
-const isOpen =ref<boolean>(false)
+const isOpen = ref<boolean>(false);
 
-function closeSettings () : void {
-  isOpen.value = false
+function closeSettings(): void {
+  isOpen.value = false;
 }
 
 const { t } = useI18n();
@@ -111,7 +111,7 @@ function handleSwitch(mode: "light" | "dark"): void {
       </div>
     </div>
     <RouterLink to="/">
-      <button @click="logOut" class="logOut error">
+      <button @click="logOut" class="logOut">
         {{ $t("settings.logOutButton") }}
       </button>
     </RouterLink>
@@ -217,9 +217,16 @@ img:hover {
   filter: brightness(0.6);
 }
 
+@media (min-width:500px) {
+  .settings {
+    min-width: 70vw;
+  }
+}
+
 .settings {
-  width: 60vw;
-  height: 60vh;
+  width: fit-content;
+  min-height: 55vh;
+  height: fit-content;
   background-color: var(--blackTheme-back);
   border-radius: 10px;
   padding: 4vh 5vw;
@@ -328,16 +335,15 @@ input:hover {
 }
 
 @media (max-width: 400px) {
-
-.settings {
-  width: 80vw;
-  position: fixed !important;
-  min-height: 60vh;
-  height: fit-content;
-  background-color: var(--blackTheme-back);
-  border-radius: 10px;
-  padding: 4vh 5vw;
-}
+  .settings {
+    width: 80vw;
+    position: fixed !important;
+    min-height: 60vh;
+    height: fit-content;
+    background-color: var(--blackTheme-back);
+    border-radius: 10px;
+    padding: 4vh 5vw;
+  }
   .cover {
     flex-direction: column;
     align-items: center;
@@ -370,6 +376,5 @@ input:hover {
     font-size: 14px;
     opacity: 0.7;
   }
-
 }
 </style>

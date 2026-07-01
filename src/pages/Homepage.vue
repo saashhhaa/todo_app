@@ -1,10 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import SideBar from "../components/SideBar.vue";
-import Tasks from "../components/Tasks.vue";
-import closeSideBarIcon from '../assets/closeSideBarIcon.svg'
-import openSideBarIcon from '../assets/openSideBarIcon.svg'
 
+import TasksManager from "../components/TasksManager.vue";
 
 const sideBarIsVisible = ref(true);
 </script>
@@ -12,80 +10,17 @@ const sideBarIsVisible = ref(true);
 <template>
   <div class="homepage">
     <SideBar v-if="sideBarIsVisible" />
-    <Tasks />
+    <TasksManager />
   </div>
-  <img
-    :class="sideBarIsVisible ? 'manageSideBar' : 'manageSideBar hidden'"
-    :src="sideBarIsVisible ? closeSideBarIcon : openSideBarIcon"
-    alt=""
-    @click="sideBarIsVisible = !sideBarIsVisible"
-  />
 </template>
-
 
 <style scoped>
 .homepage {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  position: relative;
+  justify-content: end;
   width: 100vw;
   min-height: 100vh;
-  padding-top: 30vh;
-  padding-right: 20px;
+  height: fit-content;
   background-color: var(--blackTheme-back-secondary2) !important;
-}
-
-.hidden {
-  left: 1vw !important;
-}
-
-.manageSideBar {
-  position: absolute;
-  top: 5px;
-  right: 70vw;                            
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  filter: brightness(0.5);
-  padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.375);
-  border-radius: 5px;
-}
-
-.manageSideBar:hover {
-  filter: brightness(1);
-}
-
-@media (max-width:1200px) {
-  .manageSideBar {
-    /* visibility: hidden !important; */
-    left: 85vw;
-  }
-
-  .manageSideBar.hidden{
-    left: 82vw
-  }
-
-}
-
-
-@media (max-width: 620px) {
-
-  .manageSideBar {
-    /* visibility: hidden !important; */
-    left: 85vw !important;
-    top: 2vh;
-  }
-
-  .manageSideBar.hidden{
-    left: 82vw
-  }
-
-  .homepage {
-    /* padding-top: 10vh !important;
-    padding-right: 0; */
-  }
-
 }
 </style>

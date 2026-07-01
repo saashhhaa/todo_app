@@ -1,41 +1,27 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import {
-  useCategoriesStore,
-  useTasksSStore,
-  useUsersStore,
-} from "../stores/store.js";
+import { useTasksSStore, useUsersStore } from "../stores/store.js";
 import Filter from "./Filter.vue";
 import TaskCard from "./TaskCard.vue";
 import { useI18n } from "vue-i18n";
-const newTaskTitle = ref("");
-const newTaskDeadline = ref("");
-const newTaskCategory = ref("work");
-
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
 import "dayjs/locale/en";
 import TasksTable from "./TasksTable.vue";
-const todayDate = computed(() => dayjs().format("YYYY-MM-DD"));
+import TaskForm from "./TaskForm.vue";
+import Greeting from "./Greeting.vue";
 
+const usersStore = useUsersStore();
+const tasks = useTasksSStore();
+const { t, locale } = useI18n();
+const todayDate = computed(() => dayjs().format("YYYY-MM-DD"));
 const viewDataMode = ref<"grid" | "table">("grid");
 
-const { t, locale } = useI18n();
-
-const users = useUsersStore();
-const categories = useCategoriesStore();
-const tasks = useTasksSStore();
-
 const currentMode = ref("all");
-function switchModes(mode: string) {
-  currentMode.value = mode;
-  if (mode == "all") {
-    tasks.clearCategory();
-  }
-}
+
 const filteredTasks = computed(() => {
   let result = tasks.tasks.filter(
-    (task: { userId: number }) => task.userId === users.currentUser?.id,
+    (task: { userId: number }) => task.userId === usersStore.currentUser?.id,
   );
 
   if (tasks.selectedCategory) {
@@ -60,81 +46,41 @@ const filteredTasks = computed(() => {
   return result;
 });
 
-const availableCategories = computed(() => {
-  const currentUserId = users.currentUser?.id;
-  const currCustomCategories = categories.customCategories.filter(
-    (category: { userId: number }) => category.userId == currentUserId,
-  );
-  return [...categories.categories, ...currCustomCategories];
-});
+function deleteAllDone() {
+  tasks.tasks = tasks.tasks.filter((task) => !task.isDone);
+  localStorage.setItem("tasks", JSON.stringify(tasks.tasks));
+}
 
 function formatTaskDate(rawDate: string) {
   if (!rawDate) return "";
-
   const dateObj = dayjs(rawDate);
   if (!dateObj.isValid()) return null;
-
   return dateObj.locale(locale.value).format("D MMMM");
 }
 
-function createNewTask() {
-  if (newTaskTitle.value.trim() === "") return;
-
-  tasks.createNewTask(
-    newTaskTitle.value,
-    newTaskDeadline.value ? newTaskDeadline.value : "", // when deadline
-    todayDate.value, //when created
-    newTaskCategory.value,
-  );
-
-  newTaskTitle.value = "";
-  newTaskDeadline.value = "";
+function switchModes(mode: string) {
+  currentMode.value = mode;
+  if (mode == "all") {
+    tasks.clearCategory();
+  }
 }
 </script>
 
 <template>
   <div class="taskManager">
-    <div class="createTask">
-      <input
-        type="text"
-        :placeholder="$t('taskManager.addTaskInput')"
-        v-model="newTaskTitle"
-      />
-      <div class="date">
-        <label for="date"><img src="/calendarIcon.svg" alt="" /></label>
-        <input
-          :min="todayDate"
-          v-model="newTaskDeadline"
-          type="date"
-          name=""
-          id="date"
-        />
-      </div>
-
-      <div class="categorySwitch">
-        <label for="category"><img src="/categoryIcon.svg" alt="" /></label>
-        <select v-model="newTaskCategory" name="category" id="">
-          <option
-            v-for="category in availableCategories"
-            :key="category.title"
-            :value="category.title"
-          >
-            {{ category.title }}
-          </option>
-        </select>
-      </div>
-
-      <button type="submit" @click="createNewTask">
-        {{ $t("taskManager.addTaskButton") }}
-      </button>
-    </div>
+    <Greeting />
+    <TaskForm />
     <Filter :tasks="filteredTasks" @switchModes="switchModes" />
 
-    <h3 v-if="currentMode == 'all'">{{ $t("taskManager.titleAllTasks") }}</h3>
+    <h3 v-if="currentMode == 'all'">
+      {{ $t("taskManager.titleAllTasks") }}
+    </h3>
     <h3 v-if="currentMode == 'today'">
       {{ $t("taskManager.titleTodayTasks") }}
     </h3>
-    <h3 v-if="currentMode == 'done'">{{ $t("taskManager.titleDoneTasks") }}</h3>
+    <h3 v-if="currentMode == 'done'">
+      {{ $t("taskManager.titleDoneTasks") }}
+    </h3>
     <h3 v-if="currentMode == 'active'">
       {{ $t("taskManager.titleActiveTasks") }}
     </h3>
@@ -142,22 +88,31 @@ function createNewTask() {
       {{ $t("taskManager.titleDeadlinedTasks") }}
     </h3>
 
-    <button
-      @click="
-        viewDataMode == 'table'
-          ? (viewDataMode = 'grid')
-          : (viewDataMode = 'table')
-      "
-      class="viewSwitcher"
-    >
-      {{
-        viewDataMode == "table"
-          ? $t("taskManager.switcherGrid")
-          : $t("taskManager.switcherTable")
-      }}
-    </button>
+    <div class="buttonsCover">
+      <button
+        @click="
+          viewDataMode == 'table'
+            ? (viewDataMode = 'grid')
+            : (viewDataMode = 'table')
+        "
+        class="viewSwitcher"
+      >
+        {{
+          viewDataMode == "table"
+            ? $t("taskManager.switcherGrid")
+            : $t("taskManager.switcherTable")
+        }}
+      </button>
+      <button @click="deleteAllDone" class="deleteAllDone">
+        {{ $t("taskManager.deleteAllDoneTasksButton") }}
+        <img src="/deleteIcon.svg" alt="" />
+      </button>
+    </div>
 
-    <div v-if="filteredTasks.length > 0 && viewDataMode == 'grid'" class="grid">
+    <div
+      v-if="filteredTasks.length > 0 && viewDataMode == 'grid'"
+      class="tasksGrid"
+    >
       <TaskCard
         :key="task.id"
         :id="task.id"
@@ -171,7 +126,8 @@ function createNewTask() {
         :catColor="task.catCol"
         :isDone="task.isDone"
         v-for="task in filteredTasks.filter(
-          (task: { userId: number }) => task.userId == users.currentUser?.id,
+          (task: { userId: number }) =>
+            task.userId == usersStore.currentUser?.id,
         )"
       />
     </div>
@@ -181,17 +137,81 @@ function createNewTask() {
       :key="JSON.stringify(filteredTasks)"
     />
 
-    <p class="message" v-else>{{ $t("taskManager.noTasksMessage") }}</p>
+    <p class="noTasksMessage" v-else>{{ $t("taskManager.noTasksMessage") }}</p>
   </div>
 </template>
 
 <style scoped>
-.grid {
+.taskManager {
+  padding: 5vh 5vw;
+  width: 65vw;
+}
+
+.tasksGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+h3 {
+  color: rgba(135, 137, 157, 0.604);
+  margin: 5vh 0 2vh;
+}
+
+.viewSwitcher,
+.deleteAllDone {
+  filter: brightness(0.6);
+}
+
+.viewSwitcher:hover,
+.deleteAllDone:hover {
+  filter: brightness(1);
+}
+
+
+.noTasksMessage {
+  filter: brightness(0.5);
+  text-align: center;
+  margin-top: 15vh;
+}
+
+.deleteAllDone {
+  background-color: transparent;
+  border: 1px #cb5e5e solid;
+  color: #cb5e5e;
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+}
+
+.viewSwitcher {
+  background-color: transparent;
+  border: 1px #ffffff solid;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.buttonsCover {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1190px) {
+  .tasksGrid{
+    grid-template-columns: 1fr;
+  }
+  
+}
+
+/* .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   max-height: 45vh;
   overflow-y: auto;
-  /* background-color: aqua; */
 }
 
 .taskManager {
@@ -206,22 +226,10 @@ function createNewTask() {
   margin: 5vh 0;
 }
 
-.viewSwitcher {
-  background-color: white;
-  filter: brightness(0.6);
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  font-size: 16px;
-  margin: 20px 0;
-  /* position: absolute; */
-  /* top: 33.9vh; */
-  /* right: 20vw; */
-}
 
 @media (max-width:850px) {
   .viewSwitcher {
-    /* display: none; */
+    display: none;
   }
 }
 
@@ -241,7 +249,8 @@ function createNewTask() {
   background-color: var(--accent-color);
   padding: 10px 20px;
   border-radius: 50px;
-  width: 15%;
+
+  flex-grow: 0.3;
   font-size: 1rem;
   color: white;
   border: none;
@@ -283,19 +292,10 @@ input:hover {
 .createTask button:hover {
   box-shadow: 0 0 10px var(--accent-color);
 }
-.message {
-  filter: brightness(0.5);
-  text-align: center;
-  margin-top: 20vh;
-}
-
-h3 {
-  margin-top: 30px;
-  color: rgba(135, 137, 157, 0.604);
-}
 
 
-@media (max-width: 750px) { 
+
+@media (max-width: 750px) {
   .grid{
   grid-template-columns: repeat(1, 1fr);
 
@@ -325,7 +325,6 @@ h3 {
   .grid {
     display: flex;
     flex-direction: column;
-    /* width: 100vw */
   }
 
   .message {
@@ -333,12 +332,10 @@ h3 {
   }
 
   .viewSwitcher {
-    /* position: relative; */
-    /* font-size: 12px !important;
     top: 70vh;
-    right: 20vw;; */
+    right: 20vw;
     display: none;
   }
-  
-}
+
+} */
 </style>

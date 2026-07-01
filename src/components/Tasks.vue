@@ -5,64 +5,25 @@ const tasks = useTasksSStore();
 import { computed } from "vue";
 import TasksManager from "./TasksManager.vue";
 import { useI18n } from "vue-i18n";
-import defaulProfileImage from "../assets/profileImageTest.jpg";
 
 const { t } = useI18n();
-const { locale } = useI18n();
 
-const date = computed(() => {
-  const currentLocale = locale.value === "en" ? "en-US" : "ru-RU";
-  const today = new Date();
-  return new Intl.DateTimeFormat(currentLocale, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  }).format(today);
-});
-
-function deleteAllDone() {
-  tasks.tasks = tasks.tasks.filter((task) => !task.isDone);
-  localStorage.setItem("tasks", JSON.stringify(tasks.tasks));
-}
 </script>
 
 <template>
-  <div class="main">
-    <div class="cover">
-      <div class="greeting">
-        <img
-          :src="usersStore.currentUser?.image || defaulProfileImage"
-          class="profileImage"
-        />
-        <div class="block">
-          <h1>TodoApp</h1>
-          <p class="current-user-greeting">
-            {{ $t("taskManager.greeting") }}
-            {{ usersStore.currentUser?.username }}!
-          </p>
-        </div>
-      </div>
-      <div class="date">{{ date }}</div>
-    </div>
-    <TasksManager />
-    <button @click="deleteAllDone" class="deleteAll">
-      {{ $t("taskManager.deleteAllDoneTasksButton") }}
-      <img src="/deleteIcon.svg" alt="" />
-    </button>
-  </div>
+ 
 </template>
 
 <style scoped>
 .deleteAll {
-  position: absolute;
-  bottom: -2vh;
-  right: 0vw;
   background-color: transparent;
   border: 1px solid rgb(255, 118, 118);
   padding: 10px 20px;
   font-size: 14px;
   border-radius: 10px;
   display: flex;
+justify-self: center;
+align-self: center;
   gap: 10px;
   color: rgb(255, 118, 118);
   align-items: center;  position: relative;
@@ -136,10 +97,10 @@ function deleteAllDone() {
   .main .cover .date {
     margin-top: 20px;
   }
-  .deleteAll {
+  /* .deleteAll {
     position: relative;
     bottom: -30px;
     left: 5vw;
-  }
+  } */
 }
 </style>

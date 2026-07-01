@@ -3,15 +3,14 @@
   padding: 0;
   font-family: sans-serif;
   transition: 0.2s all;
+  font-size: 1rem;
+
+  /* border: 1px red solid; */
 }
 
 body {
   background-color: var(--blackTheme-back-secondary2);
-  /* background-image: linear-gradient(to top, rgba(0, 0, 0, 0.603), transparent), url("/background.png") !important; */
-
   color: var(--blackTheme-font);
-  width: 100vw;
-  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,9 +20,9 @@ button {
   cursor: pointer;
 }
 
-span {
+/* span {
   color: var(--accent-color);
-}
+} */
 
 :root {
   --blackTheme-font: white;
@@ -33,6 +32,12 @@ span {
   --accent-color: #e18f23;
 }
 
+img{
+  width: 25px;
+  height: 25px;
+}
+
+/* 
 .error {
   color: rgb(255, 118, 118);
   font-weight: 300;
@@ -111,7 +116,6 @@ body.light-theme .save {
 }
 
 body.light-theme .taskCard.done {
-  /* filter: brightness(0.9); */
   background-color: rgba(198, 217, 210, 0.725) !important;
   color: rgb(171, 249, 218);
 }
@@ -150,4 +154,4 @@ body.light-theme span {
 
 body.light-theme .sideBar {
   background-color: rgb(238, 237, 242);
-}
+} */

@@ -213,6 +213,9 @@ img {
   border-radius: 0px 5px 5px 0px;
   border-top: 1px solid rgba(135, 137, 157, 0.604);
   border-bottom: 1px solid rgba(135, 137, 157, 0.604);
+  position: fixed;
+  z-index: 100;
+  top: 0;
 }
 
 @media (max-width: 1200px) {
@@ -220,7 +223,6 @@ img {
     width: 70vw;
     position: fixed;
     z-index: 100;
-    
   }
 }
 
@@ -326,19 +328,16 @@ input::placeholder {
   filter: brightness(1);
 }
 
-@media (max-width: 400px) {
+@media (max-width: 430px) {
   * {
     font-size: 14px !important;
   }
 
   .sideBar {
-    position: fixed;
     z-index: 100;
-    background-color: rgb(238, 237, 242);
     width: 65vw;
     padding: 10px 30px;
     height: fit-content;
-    margin-top: 5vh;
   }
 
   .categories_list {

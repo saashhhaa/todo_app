@@ -31,6 +31,7 @@ const sideBarIsVisible = ref(true);
   position: relative;
   width: 100vw;
   min-height: 100vh;
+  padding-top: 30vh;
   padding-right: 20px;
   background-color: var(--blackTheme-back-secondary2) !important;
 }
@@ -42,7 +43,7 @@ const sideBarIsVisible = ref(true);
 .manageSideBar {
   position: absolute;
   top: 5px;
-  left: 20vw;
+  right: 70vw;                            
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -82,8 +83,8 @@ const sideBarIsVisible = ref(true);
   }
 
   .homepage {
-    padding-top: 10vh !important;
-    padding-right: 0;
+    /* padding-top: 10vh !important;
+    padding-right: 0; */
   }
 
 }

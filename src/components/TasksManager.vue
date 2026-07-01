@@ -213,14 +213,15 @@ function createNewTask() {
   border-radius: 10px;
   border: none;
   font-size: 16px;
-  position: absolute;
-  top: 33.9vh;
-  right: 20vw;
+  margin: 20px 0;
+  /* position: absolute; */
+  /* top: 33.9vh; */
+  /* right: 20vw; */
 }
 
 @media (max-width:850px) {
   .viewSwitcher {
-    display: none;
+    /* display: none; */
   }
 }
 

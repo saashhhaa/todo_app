@@ -220,7 +220,7 @@ img {
     width: 70vw;
     position: fixed;
     z-index: 100;
-    background-color: rgb(238, 237, 242);
+    
   }
 }
 

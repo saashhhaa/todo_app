@@ -30,7 +30,7 @@ const sideBarIsVisible = ref(true);
   align-items: flex-start;
   position: relative;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   padding-right: 20px;
   background-color: var(--blackTheme-back-secondary2) !important;
 }
@@ -69,11 +69,12 @@ const sideBarIsVisible = ref(true);
 }
 
 
-@media (max-width: 400px) {
+@media (max-width: 620px) {
 
   .manageSideBar {
     /* visibility: hidden !important; */
-    left: 85vw;
+    left: 85vw !important;
+    top: 2vh;
   }
 
   .manageSideBar.hidden{
@@ -81,7 +82,7 @@ const sideBarIsVisible = ref(true);
   }
 
   .homepage {
-    padding-top: 5vh;
+    padding-top: 10vh !important;
     padding-right: 0;
   }
 

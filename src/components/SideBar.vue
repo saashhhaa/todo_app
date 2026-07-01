@@ -338,6 +338,7 @@ input::placeholder {
     width: 65vw;
     padding: 10px 30px;
     height: fit-content;
+    margin-top: 5vh;
   }
 
   .categories_list {
